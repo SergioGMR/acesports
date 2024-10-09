@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "api": "bunx playwright install && bun run ./src/services/index.cjs"
+    "api": "bunx playwright install && bun playwright install-deps && bun run ./src/services/index.cjs"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
