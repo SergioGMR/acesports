@@ -3,14 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import type { Event } from "../interfaces/Event";
 
-import { readFileSync } from "fs";
-import path from "path";
-
-// Leer el archivo JSON desde el servidor
-const filePath = path.resolve("./public/data/data.json");
-const fileContents = readFileSync(filePath, "utf8");
-const sportsData = JSON.parse(fileContents);
-
+import sportsData from "@data/data.json";
 const sports = [...new Set(sportsData.data.map((event: Event) => event.sport))];
 const dates = [
 	...new Set(sportsData.data.map((event: Event) => event.date.day)),

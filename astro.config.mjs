@@ -4,8 +4,9 @@ import vercel from "@astrojs/vercel/static";
 
 export default defineConfig({
   integrations: [tailwind()],
-  output: "hybrid",
-  outDir: './dist',
+  build: {
+    outDir: './dist',
+  },
   adapter: vercel({
     webAnalytics: {
       enabled: true,
