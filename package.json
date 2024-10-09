@@ -1,37 +1,31 @@
 {
   "name": "acesports",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "api": "bunx playwright install && node ./src/services/index.cjs"
+    "api": "bun run ./src/services/index.cjs"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.4",
-    "@astrojs/react": "^3.6.2",
-    "@astrojs/tailwind": "^5.1.1",
-    "@types/node": "^22.7.5",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^8.0.0-beta.2",
+    "@vercel/speed-insights": "^1.0.2",
     "astro": "^5.0.0-beta.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tailwindcss": "^3.4.13",
-    "typescript": "^5.6.2"
+    "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7",
-    "playwright": "^1.27.0"
+    "typescript": "^5.0.4"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SergioGMR/acesports"
   },
   "eslintConfig": {
-    "extends": "eslint:recommended",
-    "env": {
-      "node": true
-    }
+    "extends": "astro"
   }
 }

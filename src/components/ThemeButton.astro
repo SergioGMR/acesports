@@ -1,0 +1,71 @@
+<button id="themeToggle" class="bg-gray-200 dark:bg-gray-700 p-1 rounded-full">
+    <span class="dark:hidden">🌙</span>
+    <span class="hidden dark:inline">🌞</span>
+    <span class="hidden">⚙️</span>
+</button>
+
+<script>
+    const themeToggle = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    // Función para obtener el tema preferido por el usuario
+    function getPreferredTheme() {
+        const theme = localStorage.getItem("theme");
+        if (theme) {
+            return theme;
+        }
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    }
+
+    // Función para establecer el tema
+    function setTheme(theme: string) {
+        if (theme === "dark") {
+            html.classList.add("dark");
+        } else {
+            html.classList.remove("dark");
+        }
+        localStorage.setItem("theme", theme);
+        updateToggleButton(theme);
+    }
+
+    // Actualiza el botón de toggle con el icono correspondiente
+    function updateToggleButton(theme: string) {
+        const moonIcon = "🌙";
+        const sunIcon = "☀️";
+        const systemIcon = "⚙️";
+        if (!themeToggle) return;
+        if (theme === "dark") {
+            themeToggle.innerHTML = sunIcon;
+        } else if (theme === "light") {
+            themeToggle.innerHTML = moonIcon;
+        } else {
+            themeToggle.innerHTML = systemIcon;
+        }
+    }
+
+    // Inicializar el tema cuando la página carga
+    setTheme(getPreferredTheme());
+
+    // Agregar el event listener al botón de toggle para cambiar el tema
+    themeToggle?.addEventListener("click", () => {
+        const currentTheme = localStorage.getItem("theme") || "system";
+        if (currentTheme === "dark") {
+            setTheme("light");
+        } else if (currentTheme === "light") {
+            setTheme("system");
+        } else {
+            setTheme("dark");
+        }
+    });
+
+    // Escuchar cambios en el sistema (tema oscuro o claro del sistema)
+    window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", () => {
+            if (localStorage.getItem("theme") === "system") {
+                setTheme(getPreferredTheme());
+            }
+        });
+</script>

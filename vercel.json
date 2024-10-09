@@ -1,7 +1,8 @@
 {
+    "version": 2,
     "crons": [
         {
-            "path": "/api/index",
+            "path": "/api/cron",
             "schedule": "*/30 * * * *"
         }
     ]

@@ -1,92 +1,6 @@
 {
   "data": [
     {
-      "title": "chelsea - real madrid",
-      "teams": {
-        "home": "chelsea",
-        "away": "real madrid"
-      },
-      "sport": "soccer (w)",
-      "competition": "champions league",
-      "date": {
-        "day": "08/10/2024",
-        "time": "21:00",
-        "zone": "cet"
-      },
-      "channels": [
-        "acestream://8ca07071b39185431f8e940ec98d1add9e561639",
-        "acestream://eaff9293c76a324c750ef5094c2a4e2c96518d1f"
-      ]
-    },
-    {
-      "title": "match",
-      "teams": {
-        "home": null,
-        "away": null
-      },
-      "sport": "tennis",
-      "competition": "shanghai tournament",
-      "date": {
-        "day": "09/10/2024",
-        "time": "06:30",
-        "zone": "cet"
-      },
-      "channels": [
-        "acestream://e6f06d697f66a8fa606c4d61236c24b0d604d917"
-      ]
-    },
-    {
-      "title": "quarters",
-      "teams": {
-        "home": null,
-        "away": null
-      },
-      "sport": "snooker",
-      "competition": "wuhan open",
-      "date": {
-        "day": "09/10/2024",
-        "time": "08:00",
-        "zone": "cet"
-      },
-      "channels": [
-        "acestream://5e4cd48c79f991fcbee2de8b9d30c4b16de3b952"
-      ]
-    },
-    {
-      "title": "round 3",
-      "teams": {
-        "home": null,
-        "away": null
-      },
-      "sport": "snooker",
-      "competition": "wuhan open",
-      "date": {
-        "day": "09/10/2024",
-        "time": "08:00",
-        "zone": "cet"
-      },
-      "channels": [
-        "acestream://5e4cd48c79f991fcbee2de8b9d30c4b16de3b952"
-      ]
-    },
-    {
-      "title": "match",
-      "teams": {
-        "home": null,
-        "away": null
-      },
-      "sport": "tennis",
-      "competition": "shanghai tournament",
-      "date": {
-        "day": "09/10/2024",
-        "time": "08:30",
-        "zone": "cet"
-      },
-      "channels": [
-        "acestream://e6f06d697f66a8fa606c4d61236c24b0d604d917"
-      ]
-    },
-    {
       "title": "match",
       "teams": {
         "home": null,
@@ -900,5 +814,5 @@
       ]
     }
   ],
-  "updated": 1728400534031
+  "updated": 1728473765193
 }

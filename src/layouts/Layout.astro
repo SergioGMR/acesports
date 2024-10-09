@@ -1,0 +1,60 @@
+---
+import ThemeButton from "@/components/ThemeButton.astro";
+import { formatDate } from "../utils/dateUtils";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+interface Props {
+    title: string;
+    lastUpdate: number;
+}
+
+const { title, lastUpdate } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="Eventos deportivos" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+    </head>
+    <body
+        class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300"
+    >
+        <div class="sticky top-4 z-50 flex justify-center">
+            <div
+                class="bg-gray-100 dark:bg-gray-800 rounded-full shadow-lg px-4 py-2 flex items-center space-x-2 max-w-3xl w-full"
+            >
+                <h1 class="text-lg font-bold truncate">{title}</h1>
+                <small class="text-sm text-gray-200"
+                    >{formatDate(lastUpdate)}</small
+                >
+                <div class="flex-grow"></div>
+                <select
+                    id="sportFilter"
+                    class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm p-1 rounded border border-gray-300 dark:border-gray-600"
+                >
+                    <option value="">Deportes</option>
+                </select>
+                <select
+                    id="dateFilter"
+                    class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm p-1 rounded border border-gray-300 dark:border-gray-600"
+                >
+                    <option value="">Fechas</option>
+                </select>
+                <input
+                    type="search"
+                    id="searchFilter"
+                    placeholder="Buscar"
+                    class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm p-1 rounded border border-gray-300 dark:border-gray-600 w-24"
+                />
+                <ThemeButton client:load />
+            </div>
+        </div>
+        <slot />
+        <SpeedInsights />
+    </body>
+</html>

@@ -1,27 +1,141 @@
 ---
-import MatchesList from "@/components/matchesList";
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import type { Event } from "../interfaces/Event";
+
+import { readFileSync } from "fs";
+import path from "path";
+
+// Leer el archivo JSON desde el servidor
+const filePath = path.resolve("./public/data/data.json");
+const fileContents = readFileSync(filePath, "utf8");
+const sportsData = JSON.parse(fileContents);
+
+const sports = [...new Set(sportsData.data.map((event: Event) => event.sport))];
+const dates = [
+	...new Set(sportsData.data.map((event: Event) => event.date.day)),
+];
 ---
 
-<html lang="en">
-	<head>
-		<title>Matches List</title>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link href="/dist/output.css" rel="stylesheet" />
-		<!-- TailwindCSS included -->
-	</head>
-	<body class="bg-gray-100 text-gray-800">
-		<div class="container mx-auto py-8">
-			<h1 class="text-4xl font-bold text-center mb-8 text-blue-700">
-				Próximos Partidos
-			</h1>
-
-			<article
-				class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-			>
-				<MatchesList client:load />
-			</article>
+<Layout title="ACESports" lastUpdate={sportsData.updated}>
+	<main class="container mx-auto px-4 py-24">
+		<div
+			class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+		>
+			{sportsData.data.map((event: Event) => <Card event={event} />)}
 		</div>
-	</body>
-</html>
-<script></script>
+	</main>
+</Layout>
+
+<script>
+	const sportFilter = document.getElementById(
+		"sportFilter",
+	) as HTMLSelectElement;
+	const dateFilter = document.getElementById(
+		"dateFilter",
+	) as HTMLSelectElement;
+	const searchFilter = document.getElementById(
+		"searchFilter",
+	) as HTMLInputElement;
+	const cards = document.querySelectorAll(".card");
+
+	// Populate filter options
+	const sports = [
+		...new Set(
+			Array.from(cards).map((card) => card.getAttribute("data-sport")),
+		),
+	];
+	const dates = [
+		...new Set(
+			Array.from(cards).map((card) => card.getAttribute("data-date")),
+		),
+	];
+
+	function createOptionWithClasses(value: string, text: string) {
+		const option = document.createElement("option");
+		option.value = value || "";
+		option.textContent = text || "";
+		option.classList.add(
+			"capitalize",
+			"bg-white",
+			"dark:bg-gray-800",
+			"text-gray-900",
+			"dark:text-white",
+		);
+		return option;
+	}
+
+	sports.forEach((sport) => {
+		const option = createOptionWithClasses(sport || "", sport || "");
+		sportFilter.appendChild(option);
+	});
+
+	dates.forEach((date) => {
+		const option = createOptionWithClasses(date || "", date || "");
+		dateFilter.appendChild(option);
+	});
+
+	function filterCards() {
+		const selectedSport = sportFilter.value.toLowerCase();
+		const selectedDate = dateFilter.value;
+		const searchText = searchFilter.value.toLowerCase();
+
+		cards.forEach((card) => {
+			const cardSport = card.getAttribute("data-sport")?.toLowerCase();
+			const cardDate = card.getAttribute("data-date");
+			const cardContent = card.textContent?.toLowerCase();
+			const cardHome = card.getAttribute("data-home");
+			const cardAway = card.getAttribute("data-away");
+
+			const showCard =
+				(!selectedSport || cardSport === selectedSport) &&
+				(!selectedDate || cardDate === selectedDate) &&
+				(!searchText ||
+					cardContent?.includes(searchText) ||
+					cardHome?.includes(searchText) ||
+					cardAway?.includes(searchText));
+
+			(card as HTMLElement).style.display = showCard ? "flex" : "none";
+
+			if (showCard && searchText) {
+				highlightText(card as HTMLElement, searchText);
+			} else {
+				removeHighlight(card as HTMLElement);
+			}
+		});
+	}
+
+	function highlightText(element: HTMLElement, text: string) {
+		const searchables = element.querySelectorAll(".searchable");
+		searchables.forEach((searchable) => {
+			const content = searchable.textContent || "";
+			const highlightedContent = content.replace(
+				new RegExp(escapeRegExp(text), "gi"),
+				(match) => `<mark>${match}</mark>`,
+			);
+			searchable.innerHTML = highlightedContent;
+		});
+	}
+
+	function escapeRegExp(string: string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	}
+
+	function removeHighlight(element: HTMLElement) {
+		const marks = element.querySelectorAll("mark");
+		marks.forEach((mark) => {
+			const parent = mark.parentNode;
+			if (parent) {
+				parent.replaceChild(
+					document.createTextNode(mark.textContent || ""),
+					mark,
+				);
+				parent.normalize();
+			}
+		});
+	}
+
+	sportFilter.addEventListener("change", filterCards);
+	dateFilter.addEventListener("change", filterCards);
+	searchFilter.addEventListener("input", filterCards);
+</script>

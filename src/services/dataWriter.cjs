@@ -9,7 +9,7 @@ function writeDataToFile(matches) {
 
     try {
         // Ruta para guardar el archivo en la carpeta ./data
-        const filePath = path.join(__dirname, '..', 'data', 'data.json');
+        const filePath = path.join(__dirname, '..', '..', 'public', 'data', 'data.json');
 
         // Verifica si la carpeta existe, si no, la crea
         if (!fs.existsSync(path.dirname(filePath))) {
@@ -17,7 +17,7 @@ function writeDataToFile(matches) {
         }
 
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-        console.log('Data written successfully to ./data/data.json');
+        console.log('Data written successfully to ./public/data/data.json');
     } catch (error) {
         console.error('Error writing to file: ', error);
     }

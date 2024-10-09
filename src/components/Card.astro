@@ -1,0 +1,112 @@
+---
+const { event } = Astro.props;
+
+const sportIcons: { [key: string]: string } = {
+    soccer: "⚽",
+    basketball: "🏀",
+    tennis: "🎾",
+    snooker: "🎱",
+    handball: "🤾",
+    football: "🏈",
+    motogp: "🏍️",
+    paddle: "🎾",
+};
+
+const getIcon = (sport: string): string => {
+    const lowerSport = sport.toLowerCase().replace(/\s*\([^)]*\)/, "");
+    return sportIcons[lowerSport] || "🏅";
+};
+---
+
+<div
+    class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col h-full relative pt-6"
+    data-sport={event.sport}
+    data-date={event.date.day}
+    data-home={event.teams.home}
+    data-away={event.teams.away}
+>
+    <div
+        class="z-10 absolute -top-[2rem] left-1/2 transform -translate-x-1/2 size-16 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-5xl shadow-lg"
+    >
+        {getIcon(event.sport)}
+    </div>
+    <div class="p-6 flex-grow">
+        <div
+            class="flex flex-col items-center justify-between mb-4 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg"
+        >
+            {
+                event.teams.home && event.teams.away ? (
+                    <>
+                        <span
+                            class="text-xl font-bold mb-2 capitalize searchable"
+                            data-home={event.teams.home}
+                        >
+                            {event.teams.home}
+                        </span>
+                        <span class="text-2xl font-bold text-red-500">
+                            V.S.
+                        </span>
+                        <span
+                            class="text-xl font-bold mt-2 capitalize searchable"
+                            data-away={event.teams.away}
+                        >
+                            {event.teams.away}
+                        </span>
+                    </>
+                ) : (
+                    <h2 class="text-2xl font-bold capitalize text-center w-full">
+                        {event.title}
+                    </h2>
+                )
+            }
+        </div>
+        <p class="mb-2">
+            <strong>Deporte:</strong>
+            <span class="searchable">{event.sport}</span>
+        </p>
+        <p class="mb-2">
+            <strong>Competición:</strong>
+            <span class="searchable">{event.competition}</span>
+        </p>
+        <p class="mb-2">
+            <strong>Fecha:</strong>
+            <span class="searchable">{event.date.day}</span>
+        </p>
+        <p>
+            <strong>Hora:</strong>
+            <span
+                class="event-time searchable uppercase"
+                data-time={`${event.date.day} ${event.date.time}`}
+                data-zone={event.date.zone}
+            >
+                {event.date.time}
+                {event.date.zone}
+            </span>
+        </p>
+    </div>
+    <div class="p-6 bg-gray-100 dark:bg-gray-700 rounded-b-lg">
+        <details class="channels-accordion">
+            <summary class="cursor-pointer font-bold mb-2">Canales</summary>
+            <div class="flex flex-col gap-2">
+                {
+                    event.channels.map((channel: string, index: number) => (
+                        <a
+                            href={channel}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="bg-blue-600 text-white py-2 px-4 rounded text-center hover:bg-blue-700 transition-colors w-full"
+                        >
+                            Canal {index + 1}
+                        </a>
+                    ))
+                }
+            </div>
+        </details>
+    </div>
+</div>
+
+<style>
+    .channels-accordion[open] summary {
+        margin-bottom: 1rem;
+    }
+</style>
