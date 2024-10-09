@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     try {
         // Instalar Playwright (u otras dependencias necesarias)
         await runCommand('npx', ['playwright', 'install']);
-
+        await runCommand('npx', ['playwright', 'install-deps']);
         // Ejecutar el script index.cjs después de instalar las dependencias
         const scriptPath = path.resolve('./src/services/index.cjs');
         await runCommand('node', [scriptPath]);
