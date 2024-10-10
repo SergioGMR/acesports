@@ -3,7 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import type { Event } from "../interfaces/Event";
 
-import sportsData from "@data/data.json";
+const request = await fetch("https://aceventura.vercel.app/api/getData");
+const sportsData = await request.json();
+if (!sportsData || !sportsData.data) {
+	throw new Error("No se pudieron obtener los datos deportivos");
+}
+
 const sports = [...new Set(sportsData.data.map((event: Event) => event.sport))];
 const dates = [
 	...new Set(sportsData.data.map((event: Event) => event.date.day)),
