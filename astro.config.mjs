@@ -6,6 +6,7 @@ export default defineConfig({
   integrations: [tailwind()],
   build: {
     outDir: './dist',
+    output: 'hybrid',
   },
   adapter: vercel({
     webAnalytics: {
