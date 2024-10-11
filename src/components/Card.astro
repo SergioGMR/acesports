@@ -9,7 +9,7 @@ let lowerSport = getLowerSport(event.sport);
 ---
 
 <div
-  class="relative bg-cover bg-center rounded-xl shadow-lg p-6"
+  class="card relative bg-cover bg-center rounded-xl shadow-lg p-6"
   style={`background-image: url('/bgsports/${lowerSport}.webp');`}
   data-sport={event.sport}
   data-date={event.date.day}
@@ -85,7 +85,7 @@ let lowerSport = getLowerSport(event.sport);
           href={channel}
           target="_blank"
           rel="noopener noreferrer"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all text-sm"
         >
           Canal {index + 1}
         </a>
