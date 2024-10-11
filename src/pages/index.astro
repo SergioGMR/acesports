@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import type { Event } from "../interfaces/Event";
-import NewCard from "@/components/NewCard.astro";
 
 const request = await fetch("https://aceventura.vercel.app/api/getData");
 const sportsData = await request.json();
@@ -21,7 +20,7 @@ const dates = [
 		<div
 			class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
 		>
-			{sportsData.data.map((event: Event) => <NewCard event={event} />)}
+			{sportsData.data.map((event: Event) => <Card event={event} />)}
 		</div>
 	</main>
 </Layout>
