@@ -1,112 +1,95 @@
 ---
 const { event } = Astro.props;
 
-const sportIcons: { [key: string]: string } = {
-    soccer: "⚽",
-    basketball: "🏀",
-    tennis: "🎾",
-    snooker: "🎱",
-    handball: "🤾",
-    football: "🏈",
-    motogp: "🏍️",
-    paddle: "🎾",
+const getLowerSport = (sport: string): string => {
+  return sport.toLowerCase().replace(/\s*\([^)]*\)/, "");
 };
 
-const getIcon = (sport: string): string => {
-    const lowerSport = sport.toLowerCase().replace(/\s*\([^)]*\)/, "");
-    return sportIcons[lowerSport] || "🏅";
-};
+let lowerSport = getLowerSport(event.sport);
 ---
 
 <div
-    class="card bg-purple-100 dark:bg-gray-800 rounded-lg shadow-lg flex flex-col h-full relative pt-6"
-    data-sport={event.sport}
-    data-date={event.date.day}
-    data-home={event.teams.home}
-    data-away={event.teams.away}
+  class="relative bg-cover bg-center rounded-xl shadow-lg p-6"
+  style={`background-image: url('/bgsports/${lowerSport}.webp');`}
+  data-sport={event.sport}
+  data-date={event.date.day}
+  data-home={event.teams.home}
+  data-away={event.teams.away}
 >
-    <div
-        class="z-10 absolute -top-[2rem] left-1/2 transform -translate-x-1/2 size-16 rounded-full bg-purple-600 dark:bg-gray-600 flex items-center justify-center text-5xl shadow-lg border border-purple-200"
-    >
-        {getIcon(event.sport)}
-    </div>
-    <div class="p-6 flex-grow">
-        <div
-            class="flex flex-col items-center justify-between mb-4 bg-purple-700 dark:bg-gray-700 p-4 rounded-lg"
-        >
-            {
-                event.teams.home && event.teams.away ? (
-                    <>
-                        <span
-                            class="text-xl font-bold mb-2 capitalize searchable text-purple-100"
-                            data-home={event.teams.home}
-                        >
-                            {event.teams.home}
-                        </span>
-                        <span class="text-2xl font-bold text-orange-400">
-                            V.S.
-                        </span>
-                        <span
-                            class="text-xl font-bold mt-2 capitalize searchable text-purple-100"
-                            data-away={event.teams.away}
-                        >
-                            {event.teams.away}
-                        </span>
-                    </>
-                ) : (
-                    <h2 class="text-2xl font-bold capitalize text-center w-full text-purple-100">
-                        {event.title}
-                    </h2>
-                )
-            }
-        </div>
-        <p class="mb-2">
-            <strong>Deporte:</strong>
-            <span class="searchable capitalize">{event.sport}</span>
-        </p>
-        <p class="mb-2">
-            <strong>Competición:</strong>
-            <span class="searchable capitalize">{event.competition}</span>
-        </p>
-        <p class="mb-2">
-            <strong>Fecha:</strong>
-            <span class="searchable capitalize">{event.date.day}</span>
-        </p>
-        <p>
-            <strong>Hora:</strong>
-            <span
-                class="event-time searchable uppercase"
-                data-time={`${event.date.day} ${event.date.time}`}
-                data-zone={event.date.zone}
-            >
-                {event.date.time}
-                {event.date.zone}
-            </span>
-        </p>
-    </div>
-    <div class="p-6 bg-purple-100 dark:bg-gray-700 rounded-b-lg">
-        <details class="channels-accordion">
-            <summary class="cursor-pointer font-bold mb-2">Canales</summary>
-            <div class="flex flex-col gap-2">
-                {
-                    event.channels.map((channel: string, index: number) => (
-                        <a
-                            href={channel}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="bg-purple-600 text-white py-2 px-4 rounded text-center hover:bg-purple-700 transition-colors w-full"
-                        >
-                            Canal {index + 1}
-                        </a>
-                    ))
-                }
-            </div>
-        </details>
-    </div>
-</div>
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent opacity-90 rounded-xl"
+  >
+  </div>
 
-<style>
-    .channels-accordion[open] summary {
-        margin-bottom: 1rem;
+  <!-- Esquina superior izquierda: Deporte y Competición -->
+  <div class="absolute top-4 left-4 space-y-2">
+    <span
+      class="bg-yellow-500 searchable text-black text-xs font-bold py-1 px-3 rounded-full capitalize"
+      >{event.sport}</span
+    >
+    <span
+      class="bg-gray-700 searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize"
+      >{event.competition}</span
+    >
+  </div>
+
+  <!-- Esquina superior derecha: Fecha y Hora -->
+  <div class="absolute top-4 right-4 space-y-2 text-right">
+    <span
+      class="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded-full searchable capitalize"
+      >{event.date.day}</span
+    >
+    <span
+      class="bg-gray-700 text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
+      data-time={`${event.date.day} ${event.date.time}`}
+      data-zone={event.date.zone}
+    >
+      {event.date.time}
+      {event.date.zone}
+    </span>
+  </div>
+
+  <!-- Contenido central -->
+  <div class="relative z-10 flex flex-col items-center text-white mt-20">
+    {
+      event.teams.home && event.teams.away ? (
+        <>
+          <h2
+            class="text-2xl font-extrabold capitalize searchable"
+            data-home={event.teams.home}
+          >
+            {event.teams.home}
+          </h2>
+
+          <div class="text-lg font-semibold text-yellow-500 mt-2">V.S.</div>
+          <h2
+            class="text-2xl font-extrabold capitalize searchable"
+            data-away={event.teams.away}
+          >
+            {event.teams.away}
+          </h2>
+        </>
+      ) : (
+        <h2 class="text-2xl font-bold capitalize text-center w-full text-purple-100 searchable">
+          {event.title}
+        </h2>
+      )
     }
-</style>
+  </div>
+
+  <!-- Botón al final (si es necesario) -->
+  <div class="relative z-10 mt-8 flex justify-center gap-x-3">
+    {
+      event.channels.map((channel: string, index: number) => (
+        <a
+          href={channel}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all"
+        >
+          Canal {index + 1}
+        </a>
+      ))
+    }
+  </div>
+</div>
