@@ -6,16 +6,5 @@
   ],
   "exclude": [
     "dist"
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@data/*": [
-        "public/data/*"
-      ],
-      "@/*": [
-        "src/*"
-      ]
-    }
-  }
+  ]
 }

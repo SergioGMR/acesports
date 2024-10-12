@@ -1,12 +1,12 @@
 import { defineConfig } from 'astro/config';
 import tailwind from "@astrojs/tailwind";
-import vercel from "@astrojs/vercel/static";
+import vercel from "@astrojs/vercel/serverless";
 
 export default defineConfig({
   integrations: [tailwind()],
+  output: 'server',
   build: {
     outDir: './dist',
-    output: 'hybrid',
   },
   adapter: vercel({
     webAnalytics: {
