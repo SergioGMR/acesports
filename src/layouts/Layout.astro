@@ -14,12 +14,60 @@ const { title, lastUpdate } = Astro.props;
 <!doctype html>
 <html lang="es">
     <head>
+        <!-- Metadatos básicos -->
         <meta charset="UTF-8" />
-        <meta name="description" content="Eventos deportivos" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/webp" href="/favicon.webp" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
+
+        <!-- SEO -->
+        <meta
+            name="description"
+            content="Eventos deportivos en vivo y actualizados. Encuentra información sobre tus deportes favoritos."
+        />
+        <meta name="author" content="Tu Nombre o Nombre de la Empresa" />
+        <meta
+            name="keywords"
+            content="eventos deportivos en vivo, resultados deportivos, fútbol profesional, baloncesto NBA, tenis Grand Slam, estadísticas deportivas, noticias de deportes, ligas deportivas, atletas destacados, competiciones internacionales"
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={Astro.url} />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/webp" href="/favicon.webp" />
+
+        <!-- Tema -->
+        <meta name="theme-color" content="#4a5568" />
+
+        <!-- Open Graph -->
+        <meta property="og:title" content={title} />
+        <meta
+            property="og:description"
+            content="Eventos deportivos en vivo y actualizados. Encuentra información sobre tus deportes favoritos."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={Astro.url} />
+        <meta property="og:image" content="/og-image.webp" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+            property="og:image:alt"
+            content="Imagen de AceSports deportivos en vivo"
+        />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@tu_cuenta_de_twitter" />
+        <meta name="twitter:title" content={title} />
+        <meta
+            name="twitter:description"
+            content="Eventos deportivos en vivo y actualizados. Encuentra información sobre tus deportes favoritos."
+        />
+        <meta name="twitter:image" content="/og-image.webp" />
+        <meta
+            name="twitter:image:alt"
+            content="Imagen de AceSports deportivos en vivo"
+        />
     </head>
     <body
         class="container mx-auto bg-white dark:bg-gray-900 text-purple-500 dark:text-gray-50 transition-colors duration-300"
