@@ -17,7 +17,11 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 
 const rawSports = await request;
 const sportsData = rawSports.filter(
-	(event: Event) => event.links && event.links.length > 0,
+	(event: Event) =>
+		event.links &&
+		event.links.length > 0 &&
+		event.date.day < new Date().toISOString() &&
+		event.date.hour > new Date().toISOString(),
 );
 
 const sports = [...new Set(sportsData.map((event: Event) => event.sport))];

@@ -16,6 +16,7 @@ let lowerSport = getLowerSport(event.sport);
   data-local={event.teams.local}
   data-visitor={event.teams.visitor}
 >
+  <!-- <div class="absolute h-2 w-full bg-red-700 rounded inset-0 top-2"></div> -->
   <div
     class="z-0 absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent opacity-90 rounded-xl"
   >
@@ -53,7 +54,7 @@ let lowerSport = getLowerSport(event.sport);
         data-time={`${event.date.day} ${event.date.time}`}
         data-zone={event.date.zone}
       >
-        {event.date.time}
+        {event.date.hour}
         {event.date.zone}
       </span>
     </div>
