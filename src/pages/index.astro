@@ -1,18 +1,27 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
-import type { Event } from "../interfaces/Event";
+import Layout from "@/layouts/Layout.astro";
+import Card from "@/components/Card.astro";
+import type { Event } from "@/interfaces/Event";
 
-const request = await fetch("https://aceventura.vercel.app/api/getData");
-const sportsData = await request.json();
-if (!sportsData || !sportsData.data) {
-	throw new Error("No se pudieron obtener los datos deportivos");
-}
+const request = fetch("https://epg-sports.vercel.app/api/getEvents")
+	.then((response) => {
+		if (!response.ok) {
+			throw new Error("No se pudieron obtener los datos deportivos");
+		}
+		return response.json();
+	})
+	.catch((error) => {
+		console.error(error);
+		return null;
+	});
 
-const sports = [...new Set(sportsData.data.map((event: Event) => event.sport))];
-const dates = [
-	...new Set(sportsData.data.map((event: Event) => event.date.day)),
-];
+const rawSports = await request;
+const sportsData = rawSports.filter(
+	(event: Event) => event.links && event.links.length > 0,
+);
+
+const sports = [...new Set(sportsData.map((event: Event) => event.sport))];
+const dates = [...new Set(sportsData.map((event: Event) => event.date.day))];
 ---
 
 <Layout title="ACESports" lastUpdate={sportsData.updated}>
@@ -20,7 +29,7 @@ const dates = [
 		<div
 			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
 		>
-			{sportsData.data.map((event: Event) => <Card event={event} />)}
+			{sportsData.map((event: Event) => <Card event={event} />)}
 		</div>
 	</main>
 </Layout>

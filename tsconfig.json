@@ -4,6 +4,14 @@
     ".astro/types.d.ts",
     "**/*"
   ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
   "exclude": [
     "dist"
   ]

@@ -13,8 +13,8 @@ let lowerSport = getLowerSport(event.sport);
   style={`background-image: url('/bgsports/${lowerSport}.webp');`}
   data-sport={event.sport}
   data-date={event.date.day}
-  data-home={event.teams.home}
-  data-away={event.teams.away}
+  data-local={event.teams.local}
+  data-visitor={event.teams.visitor}
 >
   <div
     class="z-0 absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent opacity-90 rounded-xl"
@@ -28,10 +28,20 @@ let lowerSport = getLowerSport(event.sport);
         class="bg-yellow-500 searchable text-black text-xs font-bold py-1 px-3 rounded-full capitalize"
         >{event.sport}</span
       >
-      <span
-        class="bg-gray-700 searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize"
-        >{event.competition}</span
-      >
+      {
+        event.details.competition && (
+          <span class="bg-gray-700 searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize">
+            {event.details.competition}
+          </span>
+        )
+      }
+      {
+        event.details.round && (
+          <span class="bg-sky-200 searchable text-black text-xs font-semibold py-1 px-3 rounded-full capitalize">
+            {event.details.round}
+          </span>
+        )
+      }
     </div>
     <div class="flex flex-col gap-y-2">
       <span
@@ -52,21 +62,38 @@ let lowerSport = getLowerSport(event.sport);
   <!-- Contenido central -->
   <div class="relative z-10 flex flex-col items-center text-white mt-8">
     {
-      event.teams.home && event.teams.away ? (
+      event.teams.local && event.teams.visitor ? (
         <>
           <h2
             class="text-2xl font-extrabold capitalize searchable"
-            data-home={event.teams.home}
+            data-local={event.teams.local.name}
           >
-            {event.teams.home}
+            {event.teams.local.name}
           </h2>
-
-          <div class="text-lg font-semibold text-orange-500 mt-2">V.S.</div>
+          {event.teams.local.image && event.teams.visitor.image && (
+            <section class="flex gap-x-3 items-center justify-center">
+              <div>
+                <img
+                  class="h-auto w-auto"
+                  src={event.teams.local.image}
+                  alt=""
+                />
+              </div>
+              <div class="text-lg font-semibold text-orange-500 my-4">V.S.</div>
+              <div>
+                <img
+                  class="h-auto w-auto"
+                  src={event.teams.visitor.image}
+                  alt=""
+                />
+              </div>
+            </section>
+          )}
           <h2
             class="text-2xl font-extrabold capitalize searchable"
-            data-away={event.teams.away}
+            data-visitor={event.teams.visitor.name}
           >
-            {event.teams.away}
+            {event.teams.visitor.name}
           </h2>
         </>
       ) : (
@@ -78,16 +105,18 @@ let lowerSport = getLowerSport(event.sport);
   </div>
 
   <!-- Botón al final (si es necesario) -->
-  <div class="relative z-10 mt-8 flex justify-center gap-x-3">
+  <div
+    class="absolute inset-0 flex items-end justify-center z-10 bottom-4 gap-x-2"
+  >
     {
-      event.channels.map((channel: string, index: number) => (
+      event.links.map((link: string, index: number) => (
         <a
-          href={channel}
+          href={link}
           target="_blank"
           rel="noopener noreferrer"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all text-sm"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full shadow-lg transition-all text-sm"
         >
-          Ver {index + 1}
+          {index + 1}
         </a>
       ))
     }

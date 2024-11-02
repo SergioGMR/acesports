@@ -1,15 +1,27 @@
 export interface Event {
-    title: string;
-    teams: {
-        home: string | null;
-        away: string | null;
-    };
     sport: string;
-    competition: string;
-    date: {
-        day: string;
-        time: string;
-        zone: string;
-    };
+    date: DateClass;
+    details: Details;
+    teams: Teams;
     channels: string[];
+    event: Event;
+    links?: string[];
+}
+
+export interface DateClass {
+    hour: string;
+    day: string;
+    zone: string;
+}
+
+export interface Details {
+    competition: string;
+}
+
+export interface Event {
+}
+
+export interface Teams {
+    local: Event;
+    visitor: Event;
 }
