@@ -27,20 +27,6 @@ const sports = [...new Set(sportsData.map((event: SportEvent) => event.sport))];
 const dates = [
 	...new Set(sportsData.map((event: SportEvent) => event.date.day)),
 ];
-
-const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")
-	.then((response) => {
-		if (!response.ok) {
-			throw new Error("No se pudo obtener la ubicación del usuario");
-		}
-		return response.json();
-	})
-	.catch((error) => {
-		console.error(error);
-		return null;
-	});
-const geoIp = await geoIpRequest;
-const userTimezone = geoIp?.timezone;
 ---
 
 <Layout title="ACESports" lastUpdate={sportsData.updated}>
@@ -53,7 +39,6 @@ const userTimezone = geoIp?.timezone;
 					<SportCard
 						client:load
 						event={event}
-						timeZone={userTimezone}
 					/>
 				))
 			}

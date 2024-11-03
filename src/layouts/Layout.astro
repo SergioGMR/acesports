@@ -1,14 +1,14 @@
 ---
-import ThemeButton from "../components/ThemeButton.astro";
-import { formatDate } from "../utils/dateUtils";
+import ThemeButton from "@/components/ThemeButton.astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import CurrentTime from "@/components/CurrentTime";
 
 interface Props {
     title: string;
     lastUpdate: number;
 }
 
-const { title, lastUpdate } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
@@ -82,7 +82,7 @@ const { title, lastUpdate } = Astro.props;
                 <small
                     class="text-sm text-emerald-500 dark:text-gray-200
                 hidden md:block"
-                    >{formatDate(lastUpdate)}</small
+                    >Current Time: <CurrentTime client:load /></small
                 >
                 <div class="flex-grow"></div>
                 <select
