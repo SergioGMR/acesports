@@ -27,11 +27,10 @@ const eventTimeMadrid = dayjs.tz(
 );
 
 // Convertimos la fecha y hora a Atlantic/Canary
-const eventTimeCanary = eventTimeMadrid.tz(timeZone);
+const eventTime = eventTimeMadrid.tz(timeZone);
 
 // Formateamos la fecha/hora para mostrarla
-const localTimeFormatted = eventTimeCanary.format("HH:mm");
-console.log(localTimeFormatted);
+const localTimeFormatted = eventTime.format("HH:mm");
 ---
 
 <div

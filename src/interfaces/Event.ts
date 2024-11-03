@@ -1,4 +1,4 @@
-export interface Event {
+export interface SportEvent {
     sport: string;
     date: DateClass;
     details: Details;
@@ -16,12 +16,23 @@ export interface DateClass {
 
 export interface Details {
     competition: string;
+    round?: string;
 }
 
 export interface Event {
+    name?: string;
+    description?: string;
+    startDate?: string;
+    duration?: string;
 }
 
 export interface Teams {
-    local: Event;
-    visitor: Event;
+    local: {
+        name?: string;
+        image?: string;
+    }
+    visitor: {
+        name?: string;
+        image?: string;
+    }
 }

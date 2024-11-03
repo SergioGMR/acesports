@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Card from "@/components/Card.astro";
-import type { Event } from "@/interfaces/Event";
+import type { Event, SportEvent } from "@/interfaces/Event";
+import SportCard from "@/components/SportCard.tsx";
 
 const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	.then((response) => {
@@ -17,14 +17,16 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 
 const rawSports = await request;
 const sportsData = rawSports.filter(
-	(event: Event) =>
+	(event: SportEvent) =>
 		event.links &&
 		event.links.length > 0 &&
 		event.date.day < new Date().toISOString(),
 );
 
-const sports = [...new Set(sportsData.map((event: Event) => event.sport))];
-const dates = [...new Set(sportsData.map((event: Event) => event.date.day))];
+const sports = [...new Set(sportsData.map((event: SportEvent) => event.sport))];
+const dates = [
+	...new Set(sportsData.map((event: SportEvent) => event.date.day)),
+];
 
 const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")
 	.then((response) => {
@@ -47,8 +49,12 @@ const userTimezone = geoIp?.timezone;
 			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
 		>
 			{
-				sportsData.map((event: Event) => (
-					<Card event={event} timeZone={userTimezone} />
+				sportsData.map((event: SportEvent) => (
+					<SportCard
+						client:load
+						event={event}
+						timeZone={userTimezone}
+					/>
 				))
 			}
 		</div>
