@@ -1,11 +1,37 @@
 ---
-const { event } = Astro.props;
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/es";
+import timezone from "dayjs/plugin/timezone";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+// Carga los plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
+dayjs.locale("es");
+
+const { event, timeZone } = Astro.props;
 
 const getLowerSport = (sport: string): string => {
   return sport.toLowerCase().replace(/\s*\([^)]*\)/, "");
 };
 
 let lowerSport = getLowerSport(event.sport);
+
+// Define la fecha y hora en formato específico
+const eventDateTime = `${event.date.day} ${event.date.hour}`; // Ejemplo con tu formato exacto
+const eventTimeMadrid = dayjs.tz(
+  eventDateTime,
+  "DD/MM/YYYY HH:mm",
+  "Europe/Madrid",
+);
+
+// Convertimos la fecha y hora a Atlantic/Canary
+const eventTimeCanary = eventTimeMadrid.tz(timeZone);
+
+// Formateamos la fecha/hora para mostrarla
+const localTimeFormatted = eventTimeCanary.format("HH:mm");
+console.log(localTimeFormatted);
 ---
 
 <div
@@ -57,8 +83,20 @@ let lowerSport = getLowerSport(event.sport);
         data-time={`${event.date.day} ${event.date.time}`}
         data-zone={event.date.zone}
       >
-        {event.date.hour}
-        {event.date.zone}
+        <p class="text-center">
+          {event.date.hour}
+          <span class="text-[.55rem]">{event.date.zone}</span>
+        </p>
+      </span>
+      <span
+        class="bg-gray-700 z-20 overflow-hidden truncate text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
+        data-time={`${event.date.day} ${event.date.time}`}
+        data-zone={event.date.zone}
+      >
+        <p class="text-center">
+          {localTimeFormatted}
+          <span class="text-[.55rem]">{timeZone}</span>
+        </p>
       </span>
     </div>
   </div>
