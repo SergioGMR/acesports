@@ -31,14 +31,17 @@ let lowerSport = getLowerSport(event.sport);
       >
       {
         event.details.competition && (
-          <span class="bg-gray-700 searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize">
+          <span
+            title={event.details.competition}
+            class="bg-gray-700 z-20 overflow-hidden truncate searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize"
+          >
             {event.details.competition}
           </span>
         )
       }
       {
         event.details.round && (
-          <span class="bg-sky-200 searchable text-black text-xs font-semibold py-1 px-3 rounded-full capitalize">
+          <span class="bg-sky-200 z-20 overflow-hidden truncate  searchable text-black text-xs font-semibold py-1 px-3 rounded-full capitalize">
             {event.details.round}
           </span>
         )
@@ -46,11 +49,11 @@ let lowerSport = getLowerSport(event.sport);
     </div>
     <div class="flex flex-col gap-y-2">
       <span
-        class="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded-full searchable capitalize"
+        class="bg-blue-500 z-20 overflow-hidden truncate text-white text-xs font-bold py-1 px-3 rounded-full searchable capitalize"
         >{event.date.day}</span
       >
       <span
-        class="bg-gray-700 text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
+        class="bg-gray-700 z-20 overflow-hidden truncate text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
         data-time={`${event.date.day} ${event.date.time}`}
         data-zone={event.date.zone}
       >
@@ -61,7 +64,7 @@ let lowerSport = getLowerSport(event.sport);
   </div>
 
   <!-- Contenido central -->
-  <div class="relative z-10 flex flex-col items-center text-white mt-8">
+  <div class="relative z-10 flex flex-col items-center text-white mt-4">
     {
       event.teams.local && event.teams.visitor ? (
         <>
