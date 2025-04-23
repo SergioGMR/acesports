@@ -7,7 +7,7 @@ interface Props {
     lastUpdate: number;
 }
 
-const { title, lastUpdate } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
@@ -80,7 +80,7 @@ const { title, lastUpdate } = Astro.props;
                 <small
                     class="text-sm text-emerald-500 dark:text-gray-200
                 hidden md:block"
-                    >{formatDate(lastUpdate)}</small
+                    >Current Time: <CurrentTime client:load /></small
                 >
                 <div class="flex-grow"></div>
                 <select
