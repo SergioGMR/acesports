@@ -38,8 +38,8 @@ const localTimeFormatted = eventTime.format("HH:mm");
   style={`background-image: url('/bgsports/${lowerSport}.webp');`}
   data-sport={event.sport}
   data-date={event.date.day}
-  data-local={event.teams.local}
-  data-visitor={event.teams.visitor}
+  data-local={event.teams.local?.name}
+  data-visitor={event.teams.visitor?.name}
 >
   <!-- <div class="absolute h-2 w-full bg-red-700 rounded inset-0 top-2"></div> -->
   <div
@@ -79,7 +79,7 @@ const localTimeFormatted = eventTime.format("HH:mm");
       >
       <span
         class="bg-gray-700 z-20 overflow-hidden truncate text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
-        data-time={`${event.date.day} ${event.date.time}`}
+        data-time={`${event.date.day} ${event.date.hour}`}
         data-zone={event.date.zone}
       >
         <p class="text-center">
@@ -89,7 +89,7 @@ const localTimeFormatted = eventTime.format("HH:mm");
       </span>
       <span
         class="bg-gray-700 z-20 overflow-hidden truncate text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
-        data-time={`${event.date.day} ${event.date.time}`}
+        data-time={`${event.date.day} ${event.date.hour}`}
         data-zone={event.date.zone}
       >
         <p class="text-center">
@@ -139,7 +139,7 @@ const localTimeFormatted = eventTime.format("HH:mm");
         </>
       ) : (
         <h2 class="text-2xl font-bold capitalize text-center w-full text-purple-100 searchable">
-          {event.title}
+          {event.details.competition} - {event.details.round}
         </h2>
       )
     }

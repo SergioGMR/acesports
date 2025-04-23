@@ -45,7 +45,6 @@ const userTimezone = geoIp?.timezone;
 			{
 				sportsData.map((event: SportEvent) => (
 					<SportCard
-						client:load
 						event={event}
 						timeZone={userTimezone || "Europe/Madrid"}
 					/>
