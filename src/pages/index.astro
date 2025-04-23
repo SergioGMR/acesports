@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import type { Event, SportEvent } from "@/interfaces/Event";
-import SportCard from "@/components/SportCard.tsx";
+import type { SportEvent } from "@/interfaces/Event";
+import SportCard from "@/components/SportCard.astro";
 
 const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	.then((response) => {
@@ -16,17 +16,11 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	});
 
 const rawSports = await request;
+const currentDate = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
 const sportsData = rawSports.filter(
 	(event: SportEvent) =>
-		event.links &&
-		event.links.length > 0 &&
-		event.date.day < new Date().toISOString(),
+		event.links && event.links.length > 0 && event.date.day >= currentDate, // Mostrar eventos de hoy y futuros
 );
-
-const sports = [...new Set(sportsData.map((event: SportEvent) => event.sport))];
-const dates = [
-	...new Set(sportsData.map((event: SportEvent) => event.date.day)),
-];
 
 const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")
 	.then((response) => {
@@ -43,7 +37,7 @@ const geoIp = await geoIpRequest;
 const userTimezone = geoIp?.timezone;
 ---
 
-<Layout title="ACESports" lastUpdate={sportsData.updated}>
+<Layout title="ACESports" lastUpdate={Date.now()}>
 	<main class="container mx-auto py-24 md:py-48 px-10">
 		<div
 			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
@@ -53,7 +47,7 @@ const userTimezone = geoIp?.timezone;
 					<SportCard
 						client:load
 						event={event}
-						timeZone={userTimezone}
+						timeZone={userTimezone || "Europe/Madrid"}
 					/>
 				))
 			}
@@ -118,16 +112,16 @@ const userTimezone = geoIp?.timezone;
 			const cardSport = card.getAttribute("data-sport")?.toLowerCase();
 			const cardDate = card.getAttribute("data-date");
 			const cardContent = card.textContent?.toLowerCase();
-			const cardHome = card.getAttribute("data-home");
-			const cardAway = card.getAttribute("data-away");
+			const cardLocal = card.getAttribute("data-local");
+			const cardVisitor = card.getAttribute("data-visitor");
 
 			const showCard =
 				(!selectedSport || cardSport === selectedSport) &&
 				(!selectedDate || cardDate === selectedDate) &&
 				(!searchText ||
 					cardContent?.includes(searchText) ||
-					cardHome?.includes(searchText) ||
-					cardAway?.includes(searchText));
+					cardLocal?.toLowerCase().includes(searchText) ||
+					cardVisitor?.toLowerCase().includes(searchText));
 
 			(card as HTMLElement).style.display = showCard ? "flex" : "none";
 

@@ -1,7 +1,6 @@
 ---
 import ThemeButton from "../components/ThemeButton.astro";
 import { formatDate } from "../utils/dateUtils";
-import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
     title: string;
@@ -17,7 +16,6 @@ const { title, lastUpdate } = Astro.props;
         <!-- Metadatos básicos -->
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
 
         <!-- SEO -->
@@ -107,6 +105,5 @@ const { title, lastUpdate } = Astro.props;
             </div>
         </nav>
         <slot />
-        <SpeedInsights />
     </body>
 </html>
