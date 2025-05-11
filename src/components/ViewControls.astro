@@ -1,0 +1,52 @@
+---
+/**
+ * ViewControls.astro - Componente para controlar la vista de eventos (grid/list)
+ */
+---
+
+<div class="flex items-center gap-x-4">
+    <!-- Vista por filas/columnas -->
+    <div
+        class="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 flex items-center shadow-sm"
+    >
+        <button
+            id="gridViewBtn"
+            class="p-2 rounded-md bg-white shadow-sm"
+            title="Vista en cuadrícula"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 text-gray-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                ></path>
+            </svg>
+        </button>
+        <button
+            id="listViewBtn"
+            class="p-2 rounded-md hover:bg-white hover:shadow-sm"
+            title="Vista en lista"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+</div>

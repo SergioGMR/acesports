@@ -50,6 +50,10 @@
     animation: pulse-once 1s;
 }
 
+/* Estilos para los menús desplegables y opciones fueron reemplazados por clases de Tailwind */
+
+/* Los estilos de padding, hover y media queries para selects fueron reemplazados por clases de Tailwind */
+
 /* Animaciones suaves para elementos interactivos */
 .card {
     transition: all 0.3s ease;
