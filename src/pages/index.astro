@@ -16,10 +16,9 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	});
 
 const rawSports = await request;
-const currentDate = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
 const sportsData = rawSports.filter(
 	(event: SportEvent) =>
-		event.links && event.links.length > 0 && event.date.day >= currentDate, // Mostrar eventos de hoy y futuros
+		event.links && event.links.length > 0, // Mostrar eventos de hoy y futuros
 );
 
 const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")

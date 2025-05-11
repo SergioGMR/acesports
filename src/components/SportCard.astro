@@ -10,7 +10,6 @@ interface Props {
     event: SportEvent;
     timeZone: string;
 }
-
 const { event, timeZone } = Astro.props;
 
 dayjs.extend(utc);
@@ -24,8 +23,26 @@ const getLowerSport = (sport: string): string => {
 
 let lowerSport = getLowerSport(event.sport);
 
+// Función para verificar si el formato de hora es válido (HH:mm)
+const isValidTimeFormat = (timeStr: string): boolean => {
+    const timeRegex = /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/;
+    return timeRegex.test(timeStr);
+};
+
+// Obtener una hora válida o usar una predeterminada
+const getValidHour = (hourStr: string): string => {
+    if (isValidTimeFormat(hourStr)) {
+        return hourStr;
+    }
+    console.warn(
+        `Formato de hora inválido: ${hourStr}, usando 00:00 como predeterminado`,
+    );
+    return "00:00";
+};
+
 // Define la fecha y hora en formato específico
-const eventDateTime = `${event.date.day} ${event.date.hour}`; // Ejemplo con tu formato exacto
+const validHour = getValidHour(event.date.hour);
+const eventDateTime = `${event.date.day} ${validHour}`;
 const eventTimeMadrid = dayjs.tz(
     eventDateTime,
     "DD/MM/YYYY HH:mm",
