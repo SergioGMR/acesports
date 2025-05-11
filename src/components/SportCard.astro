@@ -5,6 +5,7 @@ import "dayjs/locale/es";
 import timezone from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import type { SportEvent } from "@/interfaces/Event";
+import HourDisplay from "@/components/HourDisplay.astro";
 
 interface Props {
     event: SportEvent;
@@ -50,128 +51,221 @@ const eventTimeMadrid = dayjs.tz(
 );
 
 // Convertimos la fecha y hora a la zona horaria proporcionada
-const eventTime = eventTimeMadrid.tz(timeZone);
+// Usamos timeZone si está disponible, o detectamos la zona horaria del navegador como respaldo
+const eventTime = eventTimeMadrid.tz(timeZone || dayjs.tz.guess());
 
-// Formateamos la fecha/hora para mostrarla
+// Formateamos la fecha/hora para mostrarla - hora y fecha
 const localTimeFormatted = eventTime.format("HH:mm");
+const localDateFormatted = eventTime.format("DD/MM");
+const isToday = eventTime.isSame(dayjs(), "day");
+const isTomorrow = eventTime.isSame(dayjs().add(1, "day"), "day");
+const dayLabel = isToday ? "HOY" : isTomorrow ? "MAÑANA" : localDateFormatted;
 ---
 
 <div
-    class="flex-col card relative bg-cover bg-center rounded-xl shadow-lg p-6 h-80"
-    style={`background-image: url('/bgsports/${lowerSport}.webp')`}
+    class="flex-col card relative bg-cover bg-center rounded-xl shadow-lg p-4 sm:p-6 h-auto sm:h-[440px] overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300"
+    style={`background-image: url('/bgsports/${lowerSport}.webp'); background-blend-mode: normal;`}
     data-sport={event.sport}
     data-date={event.date.day}
     data-local={event.teams.local?.name}
     data-visitor={event.teams.visitor?.name}
 >
     <div
-        class="z-0 absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent opacity-90 rounded-xl"
+        class="z-0 absolute inset-0 bg-gradient-to-t from-black/85 via-gray-900/75 to-gray-900/65 rounded-xl backdrop-blur-[2px]"
     >
     </div>
+    <!-- Indicador de deporte como etiqueta en la esquina superior -->
+    <div
+        class="absolute top-0 right-0 bg-yellow-500 text-black text-xs font-bold py-1 px-4 rounded-bl-xl rounded-tr-xl z-20"
+    >
+        {event.sport}
+    </div>
 
-    <div class="flex justify-between text-center">
-        <div class="flex flex-col gap-y-2 w-1/3">
-            <span
-                class="bg-yellow-500 searchable text-black text-xs font-bold py-1 px-3 rounded-full capitalize"
-                >{event.sport}</span
-            >
+    <!-- Sección de información del evento - con altura mínima garantizada -->
+    <div class="relative z-20 flex flex-col items-start mt-6 min-h-[70px]">
+        <!-- Competición y ronda -->
+        <div class="flex flex-col gap-y-1 mb-4 w-full">
             {
-                event.details.competition && (
+                event.details.competition ? (
                     <span
                         title={event.details.competition}
-                        class="bg-gray-700 z-20 overflow-hidden truncate searchable text-white text-xs font-semibold py-1 px-3 rounded-full capitalize"
+                        class="bg-gradient-to-r from-blue-600/80 to-blue-800/80 backdrop-blur-sm text-white text-sm font-semibold py-1.5 px-4 rounded-lg inline-block mb-1 capitalize searchable"
                     >
                         {event.details.competition}
                     </span>
+                ) : (
+                    <span class="bg-gradient-to-r from-blue-600/40 to-blue-800/40 backdrop-blur-sm text-white/0 text-sm font-semibold py-1.5 px-4 rounded-lg inline-block mb-1 h-8">
+                        &nbsp;
+                    </span>
                 )
             }
             {
-                event.details.round && (
-                    <span class="bg-sky-200 z-20 overflow-hidden truncate searchable text-black text-xs font-semibold py-1 px-3 rounded-full capitalize">
+                event.details.round ? (
+                    <span class="bg-blue-100 text-blue-900 text-xs font-medium py-1 px-3 rounded-md inline-block searchable capitalize">
                         {event.details.round}
+                    </span>
+                ) : (
+                    <span class="bg-blue-100/0 text-blue-900/0 text-xs font-medium py-1 px-3 rounded-md inline-block h-6">
+                        &nbsp;
                     </span>
                 )
             }
         </div>
-        <div class="flex flex-col gap-y-2">
-            <span
-                class="bg-blue-500 z-20 overflow-hidden truncate text-white text-xs font-bold py-1 px-3 rounded-full searchable capitalize"
-                >{event.date.day}</span
+
+        <!-- Fecha y hora con mejor UX -->
+        <div class="flex items-center mb-4 gap-x-3 text-sm">
+            <div
+                class="flex items-center bg-gradient-to-r from-purple-600/80 to-purple-800/80 backdrop-blur-sm rounded-lg py-1.5 px-4"
             >
-            <span
-                class="bg-gray-700 z-20 overflow-hidden truncate text-white text-xs font-semibold py-1 px-3 rounded-full event-time searchable uppercase"
-                data-time={`${event.date.day} ${event.date.hour}`}
-                data-zone={event.date.zone}
-            >
-                <p class="text-center">
-                    {localTimeFormatted}
-                </p>
-            </span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 text-white mr-1.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                </svg>
+                <span class="text-white font-semibold searchable uppercase">
+                    {dayLabel}
+                </span>
+            </div>
+
+            <!-- Componente especializado para mostrar la hora -->
+            <HourDisplay
+                dateText={event.date.day}
+                hourText={event.date.hour}
+                timezone={timeZone || "auto"}
+            />
         </div>
     </div>
 
-    <div class="relative z-10 flex flex-col items-center text-white mt-4">
+    <!-- Sección para los equipos con espacio reservado siempre -->
+    <div
+        class="relative z-10 flex flex-col items-center text-white mt-2 min-h-[120px]"
+    >
+        {/* Verificamos si ambos equipos existen y tienen nombres válidos */}
         {
-            event.teams.local && event.teams.visitor ? (
-                <>
-                    <h2
-                        class="text-2xl font-extrabold capitalize searchable"
-                        data-local={event.teams.local.name}
-                    >
-                        {event.teams.local.name}
-                    </h2>
-                    {event.teams.local.image && event.teams.visitor.image && (
-                        <section class="flex gap-x-3 items-center justify-center">
-                            <div>
-                                <img
-                                    class="h-auto w-auto"
-                                    src={event.teams.local.image}
-                                    alt={`Logo ${event.teams.local.name}`}
-                                />
+            event.teams.local?.name && event.teams.visitor?.name ? (
+                <div class="w-full bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-inner">
+                    <div class="grid grid-cols-5 gap-2 items-center">
+                        <div class="col-span-2 text-center">
+                            <div class="mb-2 flex justify-center items-center h-16">
+                                {event.teams.local.image ? (
+                                    <img
+                                        class="h-16 max-w-full object-contain drop-shadow-md"
+                                        src={event.teams.local.image}
+                                        alt={`Logo ${event.teams.local.name}`}
+                                    />
+                                ) : (
+                                    <div class="bg-gray-700/50 rounded-full h-12 w-12 flex items-center justify-center">
+                                        <span class="text-xl font-bold">
+                                            {event.teams.local.name?.charAt(0)}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
-                            <div class="text-lg font-semibold text-orange-500 my-4">
-                                V.S.
+                            <h2
+                                class="text-lg font-bold capitalize searchable truncate"
+                                data-local={event.teams.local.name}
+                            >
+                                {event.teams.local.name}
+                            </h2>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg font-bold rounded-full h-10 w-10 flex items-center justify-center mx-auto shadow-lg">
+                                VS
                             </div>
-                            <div>
-                                <img
-                                    class="h-auto w-auto"
-                                    src={event.teams.visitor.image}
-                                    alt={`Logo ${event.teams.visitor.name}`}
-                                />
+                        </div>
+
+                        <div class="col-span-2 text-center">
+                            <div class="mb-2 flex justify-center items-center h-16">
+                                {event.teams.visitor.image ? (
+                                    <img
+                                        class="h-16 max-w-full object-contain drop-shadow-md"
+                                        src={event.teams.visitor.image}
+                                        alt={`Logo ${event.teams.visitor.name}`}
+                                    />
+                                ) : (
+                                    <div class="bg-gray-700/50 rounded-full h-12 w-12 flex items-center justify-center">
+                                        <span class="text-xl font-bold">
+                                            {event.teams.visitor.name?.charAt(
+                                                0,
+                                            )}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
-                        </section>
-                    )}
-                    <h2
-                        class="text-2xl font-extrabold capitalize searchable"
-                        data-visitor={event.teams.visitor.name}
-                    >
-                        {event.teams.visitor.name}
-                    </h2>
-                </>
+                            <h2
+                                class="text-lg font-bold capitalize searchable truncate"
+                                data-visitor={event.teams.visitor.name}
+                            >
+                                {event.teams.visitor.name}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
             ) : (
-                <h2 class="text-2xl font-bold capitalize text-center w-full text-purple-100 searchable">
-                    {event.details.competition} - {event.details.round}
-                </h2>
+                // Si no hay equipos válidos, mostramos solo la información del evento sin estructura de equipos
+                <div class="w-full bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-inner flex items-center justify-center h-full">
+                    <h2 class="text-xl font-bold capitalize text-center text-purple-100 searchable px-4 py-2">
+                        {event.details.competition}{" "}
+                        {event.details.round ? `- ${event.details.round}` : ""}
+                    </h2>
+                </div>
             )
         }
     </div>
 
-    <div
-        class="absolute inset-0 flex items-end justify-center z-10 bottom-4 gap-x-2"
-    >
+    <!-- Enlaces de transmisión - Con espacio reservado consistente -->
+    <div class="relative z-20 mt-4 min-h-[65px] flex items-end justify-center">
         {
-            event.links &&
-                event.links.map((link: string, index: number) => (
-                    <a
-                        id={`link-${index}-${link}`}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full shadow-lg transition-all text-sm"
-                    >
-                        {index + 1}
-                    </a>
-                ))
+            event.links && event.links.length > 0 ? (
+                <div class="w-full">
+                    <p class="text-xs text-gray-300 mb-2 text-center font-medium">
+                        Enlaces disponibles:
+                    </p>
+                    <div class="flex items-center justify-center flex-wrap gap-2">
+                        {event.links.map((link: string, index: number) => (
+                            <a
+                                id={`link-${index}-${link}`}
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition-all text-sm flex items-center justify-center min-w-[40px] hover:shadow-xl hover:scale-105"
+                                title={`Enlace de transmisión ${index + 1}`}
+                            >
+                                <span>{index + 1}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div class="w-full">
+                    <p class="text-xs text-gray-400 mb-2 text-center font-medium">
+                        Sin enlaces disponibles
+                    </p>
+                    <div class="flex items-center justify-center gap-x-2">
+                        <div class="bg-gray-700/30 text-gray-500 py-2 px-4 rounded-lg text-sm min-h-[36px] min-w-[40px] flex items-center justify-center">
+                            -
+                        </div>
+                    </div>
+                </div>
+            )
         }
+    </div>
+
+    <!-- Indicador de actualización de hora local con mejor visibilidad -->
+    <div class="absolute bottom-2 right-2 z-20">
+        <span
+            class="text-xs text-gray-300 italic bg-black/30 py-1 px-2 rounded-md backdrop-blur-sm"
+            >Horario local</span
+        >
     </div>
 </div>

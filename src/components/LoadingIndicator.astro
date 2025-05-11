@@ -1,0 +1,48 @@
+---
+// LoadingIndicator.astro - Componente para mostrar una animación de carga
+---
+
+<div class="loading-indicator flex items-center justify-center">
+    <div class="relative inline-flex">
+        <div
+            class="w-8 h-8 bg-blue-500 rounded-full opacity-75 animate-ping absolute"
+        >
+        </div>
+        <div
+            class="w-8 h-8 bg-blue-500 rounded-full opacity-90 relative flex items-center justify-center"
+        >
+            <svg
+                class="w-4 h-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                ></path>
+            </svg>
+        </div>
+    </div>
+    <span class="ml-3 text-gray-700 font-medium text-sm"
+        >Actualizando eventos...</span
+    >
+</div>
+
+<style>
+    .loading-indicator {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .loading-indicator.active {
+        opacity: 1;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+</style>

@@ -1,0 +1,67 @@
+---
+/**
+ * Componente para mostrar la hora del evento adaptada a la zona horaria local
+ * Permite una presentación consistente y correcta de la hora en todas las tarjetas
+ */
+
+interface Props {
+    dateText: string;
+    hourText: string;
+    timezone: string;
+}
+
+const { dateText, hourText, timezone = "auto" } = Astro.props;
+---
+
+<div
+    class="flex items-center bg-gradient-to-r from-green-600/80 to-green-800/80 backdrop-blur-sm rounded-lg py-1.5 px-4 event-time min-h-[32px] min-w-[80px]"
+    data-date={dateText}
+    data-hour={hourText}
+    data-timezone={timezone}
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 text-white mr-1.5 flex-shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+    >
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <span class="text-white font-semibold local-time searchable">
+        {hourText || "00:00"}
+    </span>
+</div>
+
+<script>
+    import { convertTimeToLocalTimezone } from "../utils/dateUtils";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const updateTimes = () => {
+            const timeCells = document.querySelectorAll(".event-time");
+
+            timeCells.forEach((cell) => {
+                const dateString = cell.getAttribute("data-date");
+                const hourString = cell.getAttribute("data-hour");
+                const timeDisplay = cell.querySelector(".local-time");
+
+                if (dateString && hourString && timeDisplay) {
+                    // Actualiza la hora local
+                    const localTime = convertTimeToLocalTimezone(
+                        dateString,
+                        hourString,
+                    );
+                    timeDisplay.textContent = localTime;
+                }
+            });
+        };
+
+        // Actualizar inmediatamente y cada minuto
+        updateTimes();
+        setInterval(updateTimes, 60000);
+    });
+</script>

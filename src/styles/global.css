@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* Estilos personalizados para mejorar la experiencia de usuario */
+
+/* Animaciones adicionales */
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes shimmer-slow {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse-once {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s infinite;
+}
+
+.animate-shimmer-slow {
+    background-size: 200% auto;
+    animation: shimmer-slow 4s infinite linear;
+}
+
+.animate-pulse-once {
+    animation: pulse-once 1s;
+}
+
+/* Animaciones suaves para elementos interactivos */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Mejoras para textos resaltados en búsquedas */
+mark {
+    background-color: rgba(252, 211, 77, 0.6);
+    /* yellow-300 con transparencia */
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 2px;
+    animation: highlight-pulse 2s infinite;
+}
+
+@keyframes highlight-pulse {
+
+    0%,
+    100% {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Estilos para mejorar la legibilidad de textos sobre imágenes */
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Mejoras para fondos de imágenes */
+.card {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    isolation: isolate;
+    position: relative;
+}
+
+/* Mejora para hacer más visible la imagen de fondo */
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Efecto de brillo sutil en los bordes al hacer hover */
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: inherit;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0);
+    transition: all 0.3s ease;
+}
+
+.card:hover::after {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Asegurar que los contenedores de información tengan estructura consistente */
+.card>div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mejorar la distribución vertical del contenido */
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Animación para los botones */
+button,
+a {
+    transition: all 0.2s ease;
+}
+
+button:hover,
+a:hover {
+    transform: translateY(-2px);
+}
+
+button:active,
+a:active {
+    transform: translateY(0);
+}
+
+/* Estilización de barras de desplazamiento para navegadores WebKit */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.7);
+}

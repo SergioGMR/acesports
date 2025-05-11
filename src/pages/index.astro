@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import type { SportEvent } from "@/interfaces/Event";
 import SportCard from "@/components/SportCard.astro";
+import LoadingIndicator from "@/components/LoadingIndicator.astro";
 
 const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	.then((response) => {
@@ -17,8 +18,7 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 
 const rawSports = await request;
 const sportsData = rawSports.filter(
-	(event: SportEvent) =>
-		event.links && event.links.length > 0, // Mostrar eventos de hoy y futuros
+	(event: SportEvent) => event.links && event.links.length > 0, // Mostrar eventos de hoy y futuros
 );
 
 const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")
@@ -37,9 +37,250 @@ const userTimezone = geoIp?.timezone;
 ---
 
 <Layout title="ACESports" lastUpdate={Date.now()}>
-	<main class="container mx-auto py-24 md:py-48 px-10">
+	<!-- Hero Banner mejorado con animación y mejor UX -->
+	<section
+		class="relative w-full bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 py-12 px-6 mb-8 overflow-hidden"
+	>
+		<!-- Background pattern con animación sutil -->
 		<div
-			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+			class="absolute inset-0 bg-[url('/og-image.webp')] bg-cover bg-center opacity-20 animate-pulse-slow"
+		>
+		</div>
+		<!-- Gradient overlay -->
+		<div
+			class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"
+		>
+		</div>
+
+		<div class="container mx-auto z-10 relative">
+			<div class="text-center">
+				<h1
+					class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight"
+				>
+					<span
+						class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 animate-shimmer-slow"
+						>ACE</span
+					><span class="text-shadow">Sports</span>
+				</h1>
+				<p
+					class="text-lg md:text-xl text-gray-100 mb-8 max-w-3xl mx-auto font-medium"
+				>
+					Los mejores eventos deportivos en vivo, organizados para tu
+					comodidad
+				</p>
+
+				<!-- Filtros con mejor UI -->
+				<div
+					class="bg-white/10 backdrop-blur-md rounded-xl p-5 max-w-4xl mx-auto shadow-xl border border-white/20 transition-all hover:border-white/30"
+				>
+					<div
+						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+					>
+						<div class="flex flex-col">
+							<label
+								for="sportFilter"
+								class="text-white text-sm mb-2 font-medium flex items-center"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-4 w-4 mr-1"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+									></path>
+								</svg>
+								Deporte
+							</label>
+							<select
+								id="sportFilter"
+								class="bg-gray-800/80 text-white rounded-lg px-4 py-2.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none cursor-pointer hover:bg-gray-700/80"
+							>
+								<option value="">Todos los deportes</option>
+								<!-- Opciones se cargan con JavaScript -->
+							</select>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="dateFilter"
+								class="text-white text-sm mb-2 font-medium flex items-center"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-4 w-4 mr-1"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+									></path>
+								</svg>
+								Fecha
+							</label>
+							<select
+								id="dateFilter"
+								class="bg-gray-800/80 text-white rounded-lg px-4 py-2.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none cursor-pointer hover:bg-gray-700/80"
+							>
+								<option value="">Todas las fechas</option>
+								<!-- Opciones se cargan con JavaScript -->
+							</select>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="searchFilter"
+								class="text-white text-sm mb-2 font-medium flex items-center"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-4 w-4 mr-1"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+									></path>
+								</svg>
+								Buscar
+							</label>
+							<div class="relative">
+								<input
+									type="text"
+									id="searchFilter"
+									placeholder="Equipo, competición..."
+									class="bg-gray-800/80 text-white rounded-lg pl-4 pr-10 py-2.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all hover:bg-gray-700/80"
+								/>
+								<button
+									id="clearSearch"
+									class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white hidden"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-4 w-4"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M6 18L18 6M6 6l12 12"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de reiniciar filtros -->
+					<div class="mt-4 flex justify-center">
+						<button
+							id="resetFiltersHeader"
+							class="text-sm text-gray-300 hover:text-white flex items-center opacity-0 transition-all py-1 px-3 rounded-full bg-white/10 hover:bg-white/20"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-3.5 w-3.5 mr-1"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+								></path>
+							</svg>
+							Reiniciar filtros
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<main class="container mx-auto py-8 px-4 sm:px-6 lg:px-10">
+		<!-- Header con contador de eventos y controles -->
+		<div class="flex flex-wrap items-center justify-between mb-6 gap-y-3">
+			<div id="eventsContainer" class="flex items-center">
+				<div
+					id="eventsCount"
+					class="text-gray-500 text-sm font-medium px-3 py-1.5 bg-gray-100/50 backdrop-blur-sm rounded-full border border-gray-200/50"
+				>
+					Cargando eventos...
+				</div>
+			</div>
+		</div>
+
+		<!-- Indicador de carga -->
+		<div id="loadingContainer" class="mb-4">
+			<LoadingIndicator />
+
+			<div class="flex items-center gap-x-4">
+				<!-- Vista por filas/columnas -->
+				<div class="bg-gray-100 rounded-lg p-1 flex items-center">
+					<button
+						id="gridViewBtn"
+						class="p-2 rounded-md bg-white shadow-sm"
+						title="Vista en cuadrícula"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-4 w-4 text-gray-700"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+							></path>
+						</svg>
+					</button>
+					<button
+						id="listViewBtn"
+						class="p-2 rounded-md hover:bg-white hover:shadow-sm"
+						title="Vista en lista"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-4 w-4 text-gray-500"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"></path>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Contenedor principal de eventos con transición suave -->
+		<div
+			id="eventsGrid"
+			class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 transition-all duration-300"
 		>
 			{
 				sportsData.map((event: SportEvent) => (
@@ -49,6 +290,37 @@ const userTimezone = geoIp?.timezone;
 					/>
 				))
 			}
+		</div>
+
+		<!-- Mensaje cuando no hay resultados -->
+		<div id="noResults" class="hidden py-20 text-center">
+			<div
+				class="max-w-md mx-auto bg-gray-50 rounded-xl p-8 border border-gray-200"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-16 w-16 text-gray-400 mx-auto mb-4"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="1.5"
+						d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					></path>
+				</svg>
+				<p class="text-xl text-gray-700 mb-4 font-medium">
+					No se encontraron eventos con los filtros seleccionados
+				</p>
+				<button
+					id="resetFilters"
+					class="mt-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-2.5 px-6 rounded-lg transition-all shadow-md hover:shadow-lg"
+				>
+					Reiniciar filtros
+				</button>
+			</div>
 		</div>
 	</main>
 </Layout>
@@ -65,70 +337,203 @@ const userTimezone = geoIp?.timezone;
 	) as HTMLInputElement;
 	const cards = document.querySelectorAll(".card");
 
+	// Interface elements
+	const resetFiltersBtn = document.getElementById("resetFilters");
+	const resetFiltersHeaderBtn = document.getElementById("resetFiltersHeader");
+	const noResults = document.getElementById("noResults");
+	const eventsCount = document.getElementById("eventsCount");
+	const clearSearchBtn = document.getElementById("clearSearch");
+	const gridViewBtn = document.getElementById("gridViewBtn");
+	const listViewBtn = document.getElementById("listViewBtn");
+	const eventsGrid = document.getElementById("eventsGrid");
+
 	// Populate filter options
 	const sports = [
 		...new Set(
 			Array.from(cards).map((card) => card.getAttribute("data-sport")),
 		),
-	];
+	].filter(Boolean);
+
 	const dates = [
 		...new Set(
 			Array.from(cards).map((card) => card.getAttribute("data-date")),
 		),
-	];
+	].filter(Boolean);
 
-	function createOptionWithClasses(value: string, text: string) {
-		const option = document.createElement("option");
-		option.value = value || "";
-		option.textContent = text || "";
-		option.classList.add(
-			"capitalize",
-			"bg-white",
-			"dark:bg-gray-800",
-			"text-gray-900",
-			"dark:text-white",
+	// Ordenar fechas correctamente (DD/MM/YYYY)
+	dates.sort((a, b) => {
+		if (!a || !b) return 0;
+		const [dayA, monthA, yearA = new Date().getFullYear()] = a
+			.split("/")
+			.map(Number);
+		const [dayB, monthB, yearB = new Date().getFullYear()] = b
+			.split("/")
+			.map(Number);
+		return (
+			new Date(yearA, monthA - 1, dayA).getTime() -
+			new Date(yearB, monthB - 1, dayB).getTime()
 		);
-		return option;
-	}
-
-	sports.forEach((sport) => {
-		const option = createOptionWithClasses(sport || "", sport || "");
-		sportFilter.appendChild(option);
 	});
 
+	// Populate sport filter options
+	sportFilter.innerHTML = '<option value="">Todos los deportes</option>';
+	sports.sort().forEach((sport) => {
+		if (sport) {
+			const option = document.createElement("option");
+			option.value = sport;
+			option.textContent = sport;
+			sportFilter.appendChild(option);
+		}
+	});
+
+	// Populate date filter options
+	dateFilter.innerHTML = '<option value="">Todas las fechas</option>';
+
+	// Identificar "hoy" y "mañana" para mejorar UX
+	const today = new Date();
+	const todayFormatted = `${String(today.getDate()).padStart(2, "0")}/${String(today.getMonth() + 1).padStart(2, "0")}/${today.getFullYear()}`;
+
+	const tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, "0")}/${String(tomorrow.getMonth() + 1).padStart(2, "0")}/${tomorrow.getFullYear()}`;
+
 	dates.forEach((date) => {
-		const option = createOptionWithClasses(date || "", date || "");
+		if (!date) return;
+
+		let displayDate = date;
+		if (date === todayFormatted) {
+			displayDate = "HOY - " + date;
+		} else if (date === tomorrowFormatted) {
+			displayDate = "MAÑANA - " + date;
+		}
+
+		const option = document.createElement("option");
+		option.value = date;
+		option.textContent = displayDate;
 		dateFilter.appendChild(option);
 	});
 
 	function filterCards() {
+		// Activar el indicador de carga
+		const loadingIndicator = document.querySelector(".loading-indicator");
+		loadingIndicator?.classList.add("active");
+
 		const selectedSport = sportFilter.value.toLowerCase();
 		const selectedDate = dateFilter.value;
 		const searchText = searchFilter.value.toLowerCase();
+
+		// Mostrar/ocultar el botón de reinicio en el header según haya filtros aplicados
+		if (resetFiltersHeaderBtn) {
+			const hasActiveFilters =
+				selectedSport || selectedDate || searchText;
+			resetFiltersHeaderBtn.classList.toggle(
+				"opacity-0",
+				!hasActiveFilters,
+			);
+			resetFiltersHeaderBtn.classList.toggle(
+				"pointer-events-none",
+				!hasActiveFilters,
+			);
+		}
+
+		// Mostrar/ocultar botón para limpiar la búsqueda
+		if (clearSearchBtn) {
+			clearSearchBtn.classList.toggle("hidden", !searchText);
+		}
+
+		let visibleCount = 0;
+		const totalCards = cards.length;
+
+		// Agregar clase de animación para los cambios
+		document.querySelectorAll(".card").forEach((card) => {
+			card.classList.add("transition-all", "duration-300");
+		});
 
 		cards.forEach((card) => {
 			const cardSport = card.getAttribute("data-sport")?.toLowerCase();
 			const cardDate = card.getAttribute("data-date");
 			const cardContent = card.textContent?.toLowerCase();
-			const cardLocal = card.getAttribute("data-local");
-			const cardVisitor = card.getAttribute("data-visitor");
+			const cardLocal = card.getAttribute("data-local")?.toLowerCase();
+			const cardVisitor = card
+				.getAttribute("data-visitor")
+				?.toLowerCase();
 
 			const showCard =
-				(!selectedSport || cardSport === selectedSport) &&
-				(!selectedDate || cardDate === selectedDate) &&
+				(!selectedSport ||
+					selectedSport === "" ||
+					cardSport === selectedSport) &&
+				(!selectedDate ||
+					selectedDate === "" ||
+					cardDate === selectedDate) &&
 				(!searchText ||
 					cardContent?.includes(searchText) ||
-					cardLocal?.toLowerCase().includes(searchText) ||
-					cardVisitor?.toLowerCase().includes(searchText));
+					cardLocal?.includes(searchText) ||
+					cardVisitor?.includes(searchText));
 
-			(card as HTMLElement).style.display = showCard ? "flex" : "none";
+			// Aplicar cambios con animación
+			if (showCard) {
+				(card as HTMLElement).style.opacity = "1";
+				(card as HTMLElement).style.transform = "scale(1)";
+				(card as HTMLElement).style.display = "flex";
+				visibleCount++;
 
-			if (showCard && searchText) {
-				highlightText(card as HTMLElement, searchText);
+				if (searchText) {
+					highlightText(card as HTMLElement, searchText);
+				} else {
+					removeHighlight(card as HTMLElement);
+				}
 			} else {
-				removeHighlight(card as HTMLElement);
+				// Ocultar con animación
+				(card as HTMLElement).style.opacity = "0.5";
+				(card as HTMLElement).style.transform = "scale(0.95)";
+				setTimeout(() => {
+					if (!showCard) {
+						(card as HTMLElement).style.display = "none";
+					}
+				}, 200);
 			}
 		});
+
+		// Actualizar contador de eventos y mostrar mensaje de no resultados
+		if (eventsCount) {
+			if (visibleCount === totalCards) {
+				eventsCount.textContent = `Todos los eventos (${visibleCount})`;
+			} else {
+				eventsCount.textContent = `${visibleCount} evento${visibleCount !== 1 ? "s" : ""} filtrado${visibleCount !== 1 ? "s" : ""} de ${totalCards}`;
+			}
+
+			// Añadir animación al cambiar el contador
+			eventsCount.classList.add("animate-pulse-once");
+			setTimeout(
+				() => eventsCount.classList.remove("animate-pulse-once"),
+				1000,
+			);
+		}
+
+		if (noResults) {
+			if (visibleCount === 0) {
+				noResults.classList.remove("hidden");
+				setTimeout(() => {
+					noResults.style.opacity = "1";
+					noResults.style.transform = "translateY(0)";
+				}, 50);
+			} else {
+				noResults.style.opacity = "0";
+				noResults.style.transform = "translateY(20px)";
+				setTimeout(() => {
+					if (visibleCount > 0) {
+						noResults.classList.add("hidden");
+					}
+				}, 300);
+			}
+		}
+
+		// Desactivar el indicador de carga después de un ligero retraso para mostrar la animación
+		setTimeout(() => {
+			const loadingIndicator =
+				document.querySelector(".loading-indicator");
+			loadingIndicator?.classList.remove("active");
+		}, 400);
 	}
 
 	function highlightText(element: HTMLElement, text: string) {
@@ -161,7 +566,107 @@ const userTimezone = geoIp?.timezone;
 		});
 	}
 
+	function resetFilters() {
+		// Añadir efecto visual para indicar que se han restablecido los filtros
+		if (sportFilter) sportFilter.style.animation = "highlight-pulse 1s";
+		if (dateFilter) dateFilter.style.animation = "highlight-pulse 1s";
+		if (searchFilter) searchFilter.style.animation = "highlight-pulse 1s";
+
+		setTimeout(() => {
+			if (sportFilter) sportFilter.style.animation = "";
+			if (dateFilter) dateFilter.style.animation = "";
+			if (searchFilter) searchFilter.style.animation = "";
+		}, 1000);
+
+		sportFilter.value = "";
+		dateFilter.value = "";
+		searchFilter.value = "";
+		filterCards();
+	}
+
+	function clearSearchInput() {
+		searchFilter.value = "";
+		searchFilter.focus();
+		filterCards();
+	}
+
+	function setGridView() {
+		if (!eventsGrid) return;
+
+		// Guardar preferencia en localStorage
+		localStorage.setItem("viewMode", "grid");
+
+		// Cambiar a vista de cuadrícula
+		eventsGrid.className =
+			"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 transition-all duration-300";
+
+		// Actualizar apariencia de botones
+		gridViewBtn?.classList.add("bg-white", "shadow-sm");
+		gridViewBtn?.classList.add("text-gray-700");
+		listViewBtn?.classList.remove("bg-white", "shadow-sm");
+		listViewBtn?.querySelector("svg")?.classList.add("text-gray-500");
+		listViewBtn?.querySelector("svg")?.classList.remove("text-gray-700");
+		gridViewBtn?.querySelector("svg")?.classList.remove("text-gray-500");
+		gridViewBtn?.querySelector("svg")?.classList.add("text-gray-700");
+	}
+
+	function setListView() {
+		if (!eventsGrid) return;
+
+		// Guardar preferencia en localStorage
+		localStorage.setItem("viewMode", "list");
+
+		// Cambiar a vista de lista
+		eventsGrid.className =
+			"grid grid-cols-1 gap-4 transition-all duration-300";
+
+		// Actualizar apariencia de botones
+		listViewBtn?.classList.add("bg-white", "shadow-sm");
+		gridViewBtn?.classList.remove("bg-white", "shadow-sm");
+		listViewBtn?.querySelector("svg")?.classList.add("text-gray-700");
+		listViewBtn?.querySelector("svg")?.classList.remove("text-gray-500");
+		gridViewBtn?.querySelector("svg")?.classList.add("text-gray-500");
+		gridViewBtn?.querySelector("svg")?.classList.remove("text-gray-700");
+	}
+
+	// Inicializar contador de eventos
+	if (eventsCount) {
+		eventsCount.textContent = `Todos los eventos (${cards.length})`;
+	}
+
+	// Cargar preferencia de vista guardada
+	const savedViewMode = localStorage.getItem("viewMode");
+	if (savedViewMode === "list") {
+		setListView();
+	} else {
+		setGridView();
+	}
+
+	// Event listeners
 	sportFilter.addEventListener("change", filterCards);
 	dateFilter.addEventListener("change", filterCards);
 	searchFilter.addEventListener("input", filterCards);
+
+	if (resetFiltersBtn) {
+		resetFiltersBtn.addEventListener("click", resetFilters);
+	}
+
+	if (resetFiltersHeaderBtn) {
+		resetFiltersHeaderBtn.addEventListener("click", resetFilters);
+	}
+
+	if (clearSearchBtn) {
+		clearSearchBtn.addEventListener("click", clearSearchInput);
+	}
+
+	if (gridViewBtn) {
+		gridViewBtn.addEventListener("click", setGridView);
+	}
+
+	if (listViewBtn) {
+		listViewBtn.addEventListener("click", setListView);
+	}
+
+	// Inicializar filtros
+	filterCards();
 </script>
