@@ -6,16 +6,15 @@
  */
 
 // Este componente no recibe props porque se conecta directamente con los elementos que se cargan con JavaScript
+interface Props {}
 ---
 
 <script>
     // Este script contiene toda la lógica del componente FilterBar
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("FilterBar: Componente inicializado");
-
+    document.addEventListener('DOMContentLoaded', function () {
         // Agregar CSS variables para controlar los estilos de los option sin CSS personalizado
-        const darkMode = document.documentElement.classList.contains("dark");
-        const styleEl = document.createElement("style");
+        const darkMode = document.documentElement.classList.contains('dark');
+        const styleEl = document.createElement('style');
         styleEl.textContent = `
             :root {
                 --tw-option-bg: #f9fafb;
@@ -46,14 +45,14 @@
 
         function setupFilters() {
             // Referencias a los elementos de filtro
-            const sportFilter = document.getElementById("sportFilter");
-            const dateFilter = document.getElementById("dateFilter");
-            const searchFilter = document.getElementById("searchFilter");
-            const clearSearchBtn = document.getElementById("clearSearch");
+            const sportFilter = document.getElementById('sportFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            const searchFilter = document.getElementById('searchFilter');
+            const clearSearchBtn = document.getElementById('clearSearch');
             const resetFiltersHeaderBtn =
-                document.getElementById("resetFiltersHeader");
-            const filterTagsContainer = document.getElementById("filterTags");
-            const cards = document.querySelectorAll(".card");
+                document.getElementById('resetFiltersHeader');
+            const filterTagsContainer = document.getElementById('filterTags');
+            const cards = document.querySelectorAll('.card');
 
             // Verificar que todos los elementos existen
             if (
@@ -62,21 +61,14 @@
                 !searchFilter ||
                 !filterTagsContainer
             ) {
-                console.error("FilterBar: Faltan elementos críticos:", {
+                console.error('FilterBar: Faltan elementos críticos:', {
                     sportFilter: !!sportFilter,
                     dateFilter: !!dateFilter,
                     searchFilter: !!searchFilter,
-                    filterTagsContainer: !!filterTagsContainer,
+                    filterTagsContainer: !!filterTagsContainer
                 });
                 return false;
             }
-
-            console.log("FilterBar: Elementos encontrados:", {
-                sportFilter: !!sportFilter,
-                dateFilter: !!dateFilter,
-                searchFilter: !!searchFilter,
-                cards: cards.length,
-            });
 
             // Llenar opciones del filtro de deportes
             populateSportOptions(sportFilter, cards);
@@ -85,17 +77,17 @@
             populateDateOptions(dateFilter, cards);
 
             // Event listeners
-            sportFilter.addEventListener("change", filterCards);
-            dateFilter.addEventListener("change", filterCards);
-            searchFilter.addEventListener("input", filterCards);
+            sportFilter.addEventListener('change', filterCards);
+            dateFilter.addEventListener('change', filterCards);
+            searchFilter.addEventListener('input', filterCards);
 
             if (resetFiltersHeaderBtn) {
-                resetFiltersHeaderBtn.addEventListener("click", resetFilters);
+                resetFiltersHeaderBtn.addEventListener('click', resetFilters);
             }
 
             if (clearSearchBtn) {
-                clearSearchBtn.addEventListener("click", () => {
-                    (searchFilter as HTMLInputElement).value = "";
+                clearSearchBtn.addEventListener('click', () => {
+                    (searchFilter as HTMLInputElement).value = '';
                     searchFilter.focus();
                     filterCards();
                 });
@@ -115,25 +107,25 @@
         // Función para filtrar las tarjetas
         function filterCards() {
             const sportFilter = document.getElementById(
-                "sportFilter",
+                'sportFilter'
             ) as HTMLSelectElement;
             const dateFilter = document.getElementById(
-                "dateFilter",
+                'dateFilter'
             ) as HTMLSelectElement;
             const searchFilter = document.getElementById(
-                "searchFilter",
+                'searchFilter'
             ) as HTMLInputElement;
             const resetFiltersHeaderBtn =
-                document.getElementById("resetFiltersHeader");
-            const clearSearchBtn = document.getElementById("clearSearch");
-            const eventsCount = document.getElementById("eventsCount");
-            const noResults = document.getElementById("noResults");
-            const cards = document.querySelectorAll(".card");
+                document.getElementById('resetFiltersHeader');
+            const clearSearchBtn = document.getElementById('clearSearch');
+            const eventsCount = document.getElementById('eventsCount');
+            const noResults = document.getElementById('noResults');
+            const cards = document.querySelectorAll('.card');
 
             // Activar el indicador de carga
             const loadingIndicator =
-                document.querySelector(".loading-indicator");
-            loadingIndicator?.classList.add("active");
+                document.querySelector('.loading-indicator');
+            loadingIndicator?.classList.add('active');
 
             const selectedSport = sportFilter.value.toLowerCase();
             const selectedDate = dateFilter.value;
@@ -144,18 +136,18 @@
                 const hasActiveFilters =
                     selectedSport || selectedDate || searchText;
                 resetFiltersHeaderBtn.classList.toggle(
-                    "opacity-0",
-                    !hasActiveFilters,
+                    'opacity-0',
+                    !hasActiveFilters
                 );
                 resetFiltersHeaderBtn.classList.toggle(
-                    "pointer-events-none",
-                    !hasActiveFilters,
+                    'pointer-events-none',
+                    !hasActiveFilters
                 );
             }
 
             // Mostrar/ocultar botón para limpiar la búsqueda
             if (clearSearchBtn) {
-                clearSearchBtn.classList.toggle("hidden", !searchText);
+                clearSearchBtn.classList.toggle('hidden', !searchText);
             }
 
             // Actualizar etiquetas de filtro
@@ -164,27 +156,27 @@
             let visibleCount = 0;
             const totalCards = cards.length;
 
-            cards.forEach((card) => {
+            cards.forEach(card => {
                 const cardSport = (card as HTMLElement)
-                    .getAttribute("data-sport")
+                    .getAttribute('data-sport')
                     ?.toLowerCase();
                 const cardDate = (card as HTMLElement).getAttribute(
-                    "data-date",
+                    'data-date'
                 );
                 const cardContent = card.textContent?.toLowerCase();
                 const cardLocal = (card as HTMLElement)
-                    .getAttribute("data-local")
+                    .getAttribute('data-local')
                     ?.toLowerCase();
                 const cardVisitor = (card as HTMLElement)
-                    .getAttribute("data-visitor")
+                    .getAttribute('data-visitor')
                     ?.toLowerCase();
 
                 const showCard =
                     (!selectedSport ||
-                        selectedSport === "" ||
+                        selectedSport === '' ||
                         cardSport === selectedSport) &&
                     (!selectedDate ||
-                        selectedDate === "" ||
+                        selectedDate === '' ||
                         cardDate === selectedDate) &&
                     (!searchText ||
                         cardContent?.includes(searchText) ||
@@ -193,9 +185,9 @@
 
                 // Aplicar cambios con animación
                 if (showCard) {
-                    (card as HTMLElement).style.opacity = "1";
-                    (card as HTMLElement).style.transform = "scale(1)";
-                    (card as HTMLElement).style.display = "flex";
+                    (card as HTMLElement).style.opacity = '1';
+                    (card as HTMLElement).style.transform = 'scale(1)';
+                    (card as HTMLElement).style.display = 'flex';
                     visibleCount++;
 
                     if (searchText) {
@@ -205,11 +197,11 @@
                     }
                 } else {
                     // Ocultar con animación
-                    (card as HTMLElement).style.opacity = "0.5";
-                    (card as HTMLElement).style.transform = "scale(0.95)";
+                    (card as HTMLElement).style.opacity = '0.5';
+                    (card as HTMLElement).style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         if (!showCard) {
-                            (card as HTMLElement).style.display = "none";
+                            (card as HTMLElement).style.display = 'none';
                         }
                     }, 200);
                 }
@@ -220,26 +212,26 @@
                 if (visibleCount === totalCards) {
                     eventsCount.textContent = `Todos los eventos (${visibleCount})`;
                 } else {
-                    eventsCount.textContent = `${visibleCount} evento${visibleCount !== 1 ? "s" : ""} filtrado${visibleCount !== 1 ? "s" : ""} de ${totalCards}`;
+                    eventsCount.textContent = `${visibleCount} evento${visibleCount !== 1 ? 's' : ''} filtrado${visibleCount !== 1 ? 's' : ''} de ${totalCards}`;
                 }
             }
 
             // Mostrar mensaje de "no hay resultados" si es necesario
             if (noResults) {
                 if (visibleCount === 0) {
-                    noResults.classList.remove("hidden");
+                    noResults.classList.remove('hidden');
                     setTimeout(() => {
-                        (noResults as HTMLElement).style.opacity = "1";
+                        (noResults as HTMLElement).style.opacity = '1';
                         (noResults as HTMLElement).style.transform =
-                            "translateY(0)";
+                            'translateY(0)';
                     }, 50);
                 } else {
-                    (noResults as HTMLElement).style.opacity = "0";
+                    (noResults as HTMLElement).style.opacity = '0';
                     (noResults as HTMLElement).style.transform =
-                        "translateY(20px)";
+                        'translateY(20px)';
                     setTimeout(() => {
                         if (visibleCount > 0) {
-                            noResults.classList.add("hidden");
+                            noResults.classList.add('hidden');
                         }
                     }, 300);
                 }
@@ -247,18 +239,18 @@
 
             // Desactivar el indicador de carga
             setTimeout(() => {
-                loadingIndicator?.classList.remove("active");
+                loadingIndicator?.classList.remove('active');
             }, 400);
         }
 
         // Función para resaltar el texto buscado
         function highlightText(element, text) {
-            const searchables = element.querySelectorAll(".searchable");
-            searchables.forEach((searchable) => {
-                const content = searchable.textContent || "";
+            const searchables = element.querySelectorAll('.searchable');
+            searchables.forEach(searchable => {
+                const content = searchable.textContent || '';
                 const highlightedContent = content.replace(
-                    new RegExp(escapeRegExp(text), "gi"),
-                    (match) => `<mark>${match}</mark>`,
+                    new RegExp(escapeRegExp(text), 'gi'),
+                    match => `<mark>${match}</mark>`
                 );
                 searchable.innerHTML = highlightedContent;
             });
@@ -266,18 +258,18 @@
 
         // Función para escapar caracteres especiales en regex
         function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         // Función para quitar resaltado
         function removeHighlight(element) {
-            const marks = element.querySelectorAll("mark");
-            marks.forEach((mark) => {
+            const marks = element.querySelectorAll('mark');
+            marks.forEach(mark => {
                 const parent = mark.parentNode;
                 if (parent) {
                     parent.replaceChild(
-                        document.createTextNode(mark.textContent || ""),
-                        mark,
+                        document.createTextNode(mark.textContent || ''),
+                        mark
                     );
                     parent.normalize();
                 }
@@ -287,35 +279,35 @@
         // Función para reiniciar filtros
         function resetFilters() {
             const sportFilter = document.getElementById(
-                "sportFilter",
+                'sportFilter'
             ) as HTMLSelectElement;
             const dateFilter = document.getElementById(
-                "dateFilter",
+                'dateFilter'
             ) as HTMLSelectElement;
             const searchFilter = document.getElementById(
-                "searchFilter",
+                'searchFilter'
             ) as HTMLInputElement;
             const resetFiltersHeaderBtn =
-                document.getElementById("resetFiltersHeader");
-            const filterTagsContainer = document.getElementById("filterTags");
+                document.getElementById('resetFiltersHeader');
+            const filterTagsContainer = document.getElementById('filterTags');
 
             // Limpiar etiquetas de filtro
             if (filterTagsContainer) {
-                filterTagsContainer.innerHTML = "";
+                filterTagsContainer.innerHTML = '';
             }
 
             // Ocultar botón de reinicio
             if (resetFiltersHeaderBtn) {
                 resetFiltersHeaderBtn.classList.add(
-                    "opacity-0",
-                    "pointer-events-none",
+                    'opacity-0',
+                    'pointer-events-none'
                 );
             }
 
             // Resetear valores
-            sportFilter.value = "";
-            dateFilter.value = "";
-            searchFilter.value = "";
+            sportFilter.value = '';
+            dateFilter.value = '';
+            searchFilter.value = '';
 
             // Aplicar filtros
             filterCards();
@@ -323,19 +315,19 @@
 
         // Función para actualizar etiquetas de filtro
         function updateFilterTags(sport, date, search) {
-            const filterTagsContainer = document.getElementById("filterTags");
+            const filterTagsContainer = document.getElementById('filterTags');
             if (!filterTagsContainer) return;
 
             // Limpiar etiquetas existentes
-            filterTagsContainer.innerHTML = "";
+            filterTagsContainer.innerHTML = '';
 
             // Crear etiquetas para filtros activos
             if (sport) {
-                const sportTag = createFilterTag(sport, "blue", () => {
+                const sportTag = createFilterTag(sport, 'blue', () => {
                     const sportFilter = document.getElementById(
-                        "sportFilter",
+                        'sportFilter'
                     ) as HTMLSelectElement;
-                    sportFilter.value = "";
+                    sportFilter.value = '';
                     filterCards();
                 });
                 filterTagsContainer.appendChild(sportTag);
@@ -345,23 +337,23 @@
                 // Determinar si es HOY o MAÑANA para mejor UI
                 let displayDate = date;
                 const today = new Date();
-                const todayFormatted = `${String(today.getDate()).padStart(2, "0")}/${String(today.getMonth() + 1).padStart(2, "0")}/${today.getFullYear()}`;
+                const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, "0")}/${String(tomorrow.getMonth() + 1).padStart(2, "0")}/${tomorrow.getFullYear()}`;
+                const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, '0')}/${String(tomorrow.getMonth() + 1).padStart(2, '0')}/${tomorrow.getFullYear()}`;
 
                 if (date === todayFormatted) {
-                    displayDate = "HOY";
+                    displayDate = 'HOY';
                 } else if (date === tomorrowFormatted) {
-                    displayDate = "MAÑANA";
+                    displayDate = 'MAÑANA';
                 }
 
-                const dateTag = createFilterTag(displayDate, "green", () => {
+                const dateTag = createFilterTag(displayDate, 'green', () => {
                     const dateFilter = document.getElementById(
-                        "dateFilter",
+                        'dateFilter'
                     ) as HTMLSelectElement;
-                    dateFilter.value = "";
+                    dateFilter.value = '';
                     filterCards();
                 });
                 filterTagsContainer.appendChild(dateTag);
@@ -370,14 +362,14 @@
             if (search) {
                 const searchTag = createFilterTag(
                     `"${search}"`,
-                    "purple",
+                    'purple',
                     () => {
                         const searchFilter = document.getElementById(
-                            "searchFilter",
+                            'searchFilter'
                         ) as HTMLInputElement;
-                        searchFilter.value = "";
+                        searchFilter.value = '';
                         filterCards();
-                    },
+                    }
                 );
                 filterTagsContainer.appendChild(searchTag);
             }
@@ -385,36 +377,36 @@
 
         // Función para crear etiquetas de filtro
         function createFilterTag(text, color, removeHandler) {
-            const tag = document.createElement("div");
+            const tag = document.createElement('div');
 
             // Asignar clase de color según el tipo de filtro
-            let bgColorClass = "";
-            let hoverClass = "";
+            let bgColorClass = '';
+            let hoverClass = '';
 
             switch (color) {
-                case "blue":
-                    bgColorClass = "bg-blue-500";
-                    hoverClass = "hover:text-blue-200";
+                case 'blue':
+                    bgColorClass = 'bg-blue-500';
+                    hoverClass = 'hover:text-blue-200';
                     break;
-                case "green":
-                    bgColorClass = "bg-green-500";
-                    hoverClass = "hover:text-green-200";
+                case 'green':
+                    bgColorClass = 'bg-green-500';
+                    hoverClass = 'hover:text-green-200';
                     break;
-                case "purple":
-                    bgColorClass = "bg-purple-500";
-                    hoverClass = "hover:text-purple-200";
+                case 'purple':
+                    bgColorClass = 'bg-purple-500';
+                    hoverClass = 'hover:text-purple-200';
                     break;
                 default:
-                    bgColorClass = "bg-gray-500";
-                    hoverClass = "hover:text-gray-200";
+                    bgColorClass = 'bg-gray-500';
+                    hoverClass = 'hover:text-gray-200';
             }
 
             tag.className = `text-xs text-white ${bgColorClass} rounded-full px-3 py-1 flex items-center gap-x-1 shadow-sm animate-pulse-once`;
 
-            const tagText = document.createElement("span");
+            const tagText = document.createElement('span');
             tagText.textContent = text;
 
-            const removeBtn = document.createElement("button");
+            const removeBtn = document.createElement('button');
             removeBtn.className = hoverClass;
             removeBtn.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -422,7 +414,7 @@
             </svg>
         `;
 
-            removeBtn.addEventListener("click", removeHandler);
+            removeBtn.addEventListener('click', removeHandler);
 
             tag.appendChild(tagText);
             tag.appendChild(removeBtn);
@@ -431,42 +423,42 @@
         }
 
         // Notificar que el componente FilterBar está disponible
-        document.dispatchEvent(new CustomEvent("filterbar:ready"));
+        document.dispatchEvent(new CustomEvent('filterbar:ready'));
 
         // Función para llenar las opciones del filtro de deportes
         function populateSportOptions(sportFilter, cards) {
             // Obtener deportes únicos de las tarjetas
             const sports = [
                 ...new Set(
-                    Array.from(cards).map((card) =>
-                        (card as HTMLElement).getAttribute("data-sport"),
-                    ),
-                ),
+                    Array.from(cards).map(card =>
+                        (card as HTMLElement).getAttribute('data-sport')
+                    )
+                )
             ].filter(Boolean);
 
             // Ordenar alfabéticamente
             sports.sort();
 
             // Agregar las opciones al selector con clases Tailwind
-            sportFilter.innerHTML = "";
-            const placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Todos los deportes";
-            placeholderOption.setAttribute("data-tailwind-option", "true");
+            sportFilter.innerHTML = '';
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = '';
+            placeholderOption.textContent = 'Todos los deportes';
+            placeholderOption.setAttribute('data-tailwind-option', 'true');
             placeholderOption.classList.add(
-                "py-2",
-                "px-3",
-                "cursor-pointer",
-                "italic",
-                "font-medium",
+                'py-2',
+                'px-3',
+                'cursor-pointer',
+                'italic',
+                'font-medium'
             );
             placeholderOption.style.backgroundColor =
-                "var(--tw-option-bg, #f9fafb)";
-            placeholderOption.style.color = "var(--tw-option-text, #1f2937)";
+                'var(--tw-option-bg, #f9fafb)';
+            placeholderOption.style.color = 'var(--tw-option-text, #1f2937)';
             sportFilter.appendChild(placeholderOption);
-            sports.forEach((sport) => {
+            sports.forEach(sport => {
                 if (sport) {
-                    const option = document.createElement("option");
+                    const option = document.createElement('option');
                     option.value = sport.toLowerCase();
                     // Capitalizar primera letra para mejor presentación
                     const sportName =
@@ -474,21 +466,21 @@
                     option.textContent = sportName;
 
                     // Usar data-tailwind para agregar clases Tailwind en tiempo de ejecución
-                    option.setAttribute("data-tailwind-option", "true");
+                    option.setAttribute('data-tailwind-option', 'true');
                     option.classList.add(
-                        "py-2",
-                        "px-3",
-                        "cursor-pointer",
-                        "border-b",
-                        "border-gray-200",
-                        "dark:border-gray-700",
-                        "last:border-b-0",
+                        'py-2',
+                        'px-3',
+                        'cursor-pointer',
+                        'border-b',
+                        'border-gray-200',
+                        'dark:border-gray-700',
+                        'last:border-b-0'
                     );
 
                     // Configurar colores claros y oscuros apropiados
                     option.style.backgroundColor =
-                        "var(--tw-option-bg, #f9fafb)";
-                    option.style.color = "var(--tw-option-text, #1f2937)";
+                        'var(--tw-option-bg, #f9fafb)';
+                    option.style.color = 'var(--tw-option-text, #1f2937)';
 
                     sportFilter.appendChild(option);
                 }
@@ -500,28 +492,28 @@
             // Obtener fechas únicas de las tarjetas
             const dates = [
                 ...new Set(
-                    Array.from(cards).map((card) =>
-                        (card as HTMLElement).getAttribute("data-date"),
-                    ),
-                ),
+                    Array.from(cards).map(card =>
+                        (card as HTMLElement).getAttribute('data-date')
+                    )
+                )
             ].filter(Boolean);
 
             // Identificar "hoy" y "mañana" para mejorar UX
             const today = new Date();
-            const todayFormatted = `${String(today.getDate()).padStart(2, "0")}/${String(today.getMonth() + 1).padStart(2, "0")}/${today.getFullYear()}`;
+            const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, "0")}/${String(tomorrow.getMonth() + 1).padStart(2, "0")}/${tomorrow.getFullYear()}`;
+            const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, '0')}/${String(tomorrow.getMonth() + 1).padStart(2, '0')}/${tomorrow.getFullYear()}`;
 
             // Ordenar fechas correctamente (DD/MM/YYYY)
             dates.sort((a, b) => {
                 if (!a || !b) return 0;
                 const [dayA, monthA, yearA = new Date().getFullYear()] = a
-                    .split("/")
+                    .split('/')
                     .map(Number);
                 const [dayB, monthB, yearB = new Date().getFullYear()] = b
-                    .split("/")
+                    .split('/')
                     .map(Number);
                 return (
                     new Date(yearA, monthA - 1, dayA).getTime() -
@@ -530,52 +522,52 @@
             });
 
             // Agregar las opciones al selector con clases Tailwind
-            dateFilter.innerHTML = "";
-            const placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Todas las fechas";
-            placeholderOption.setAttribute("data-tailwind-option", "true");
+            dateFilter.innerHTML = '';
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = '';
+            placeholderOption.textContent = 'Todas las fechas';
+            placeholderOption.setAttribute('data-tailwind-option', 'true');
             placeholderOption.classList.add(
-                "py-2",
-                "px-3",
-                "cursor-pointer",
-                "italic",
-                "font-medium",
+                'py-2',
+                'px-3',
+                'cursor-pointer',
+                'italic',
+                'font-medium'
             );
             placeholderOption.style.backgroundColor =
-                "var(--tw-option-bg, #f9fafb)";
-            placeholderOption.style.color = "var(--tw-option-text, #1f2937)";
+                'var(--tw-option-bg, #f9fafb)';
+            placeholderOption.style.color = 'var(--tw-option-text, #1f2937)';
             dateFilter.appendChild(placeholderOption);
 
-            dates.forEach((date) => {
+            dates.forEach(date => {
                 if (!date) return;
 
                 let displayDate = date;
                 if (date === todayFormatted) {
-                    displayDate = "HOY - " + date;
+                    displayDate = 'HOY - ' + date;
                 } else if (date === tomorrowFormatted) {
-                    displayDate = "MAÑANA - " + date;
+                    displayDate = 'MAÑANA - ' + date;
                 }
 
-                const option = document.createElement("option");
+                const option = document.createElement('option');
                 option.value = date;
                 option.textContent = displayDate;
 
                 // Usar data-tailwind para agregar clases Tailwind en tiempo de ejecución
-                option.setAttribute("data-tailwind-option", "true");
+                option.setAttribute('data-tailwind-option', 'true');
                 option.classList.add(
-                    "py-2",
-                    "px-3",
-                    "cursor-pointer",
-                    "border-b",
-                    "border-gray-200",
-                    "dark:border-gray-700",
-                    "last:border-b-0",
+                    'py-2',
+                    'px-3',
+                    'cursor-pointer',
+                    'border-b',
+                    'border-gray-200',
+                    'dark:border-gray-700',
+                    'last:border-b-0'
                 );
 
                 // Configurar colores claros y oscuros apropiados
-                option.style.backgroundColor = "var(--tw-option-bg, #f9fafb)";
-                option.style.color = "var(--tw-option-text, #1f2937)";
+                option.style.backgroundColor = 'var(--tw-option-bg, #f9fafb)';
+                option.style.color = 'var(--tw-option-text, #1f2937)';
 
                 dateFilter.appendChild(option);
             });
@@ -585,100 +577,100 @@
 
 <!-- Contenedor exterior con fondo translúcido -->
 <div
-    class="bg-white/10 backdrop-blur-md rounded-xl p-5 max-w-4xl mx-auto shadow-xl border border-white/20 transition-all hover:border-white/30"
+    class='bg-white/10 backdrop-blur-md rounded-xl p-5 max-w-4xl mx-auto shadow-xl border border-white/20 transition-all hover:border-white/30'
 >
     <!-- Barra de filtro redondeada con fondo gris -->
     <div
-        class="bg-gray-100 dark:bg-gray-800 rounded-full shadow-xl px-4 py-2 flex flex-wrap items-center space-x-2 w-full gap-x-2 mb-4"
+        class='bg-gray-100 dark:bg-gray-800 rounded-full shadow-xl px-4 py-2 flex flex-wrap items-center space-x-2 w-full gap-x-2 mb-4'
     >
         <!-- Icono de filtro -->
-        <div class="text-gray-600 dark:text-gray-300 pl-2">
+        <div class='text-gray-600 dark:text-gray-300 pl-2'>
             <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                class='h-5 w-5'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
             >
                 <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'
                 ></path>
             </svg>
         </div>
 
         <!-- Filtro de deportes -->
-        <div class="flex-grow flex items-center">
+        <div class='flex-grow flex items-center'>
             <select
-                id="sportFilter"
-                class="bg-transparent text-gray-700 dark:text-white px-3 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 appearance-none cursor-pointer w-full pr-10 hover:bg-black/5 dark:hover:bg-white/5 md:min-w-[180px]"
+                id='sportFilter'
+                class='bg-transparent text-gray-700 dark:text-white px-3 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 appearance-none cursor-pointer w-full pr-10 hover:bg-black/5 dark:hover:bg-white/5 md:min-w-[180px]'
                 style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%236b7280%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22%3E%3C/path%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem;"
             >
-                <option value="">Todos los deportes</option>
+                <option value=''>Todos los deportes</option>
                 <!-- Opciones se cargan con JavaScript -->
             </select>
         </div>
 
         <!-- Separador vertical -->
-        <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1 hidden sm:block">
+        <div class='h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1 hidden sm:block'>
         </div>
 
         <!-- Filtro de fechas -->
-        <div class="flex-grow flex items-center">
+        <div class='flex-grow flex items-center'>
             <select
-                id="dateFilter"
-                class="bg-transparent text-gray-700 dark:text-white px-3 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 appearance-none cursor-pointer w-full pr-10 hover:bg-black/5 dark:hover:bg-white/5 md:min-w-[180px]"
+                id='dateFilter'
+                class='bg-transparent text-gray-700 dark:text-white px-3 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 appearance-none cursor-pointer w-full pr-10 hover:bg-black/5 dark:hover:bg-white/5 md:min-w-[180px]'
                 style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%236b7280%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22%3E%3C/path%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem;"
             >
-                <option value="">Todas las fechas</option>
+                <option value=''>Todas las fechas</option>
                 <!-- Opciones se cargan con JavaScript -->
             </select>
         </div>
 
         <!-- Separador vertical -->
-        <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1 hidden sm:block">
+        <div class='h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1 hidden sm:block'>
         </div>
 
         <!-- Búsqueda -->
-        <div class="flex-grow relative max-w-xs">
-            <div class="relative flex items-center">
+        <div class='flex-grow relative max-w-xs'>
+            <div class='relative flex items-center'>
                 <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-gray-500 dark:text-gray-400 absolute left-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    xmlns='http://www.w3.org/2000/svg'
+                    class='h-4 w-4 text-gray-500 dark:text-gray-400 absolute left-3'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
                 >
                     <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        stroke-linecap='round'
+                        stroke-linejoin='round'
+                        stroke-width='2'
+                        d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
                 </svg>
                 <input
-                    type="text"
-                    id="searchFilter"
-                    placeholder="Buscar..."
-                    class="bg-transparent text-gray-700 dark:text-white rounded-full pl-9 pr-10 py-1.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type='text'
+                    id='searchFilter'
+                    placeholder='Buscar...'
+                    class='bg-transparent text-gray-700 dark:text-white rounded-full pl-9 pr-10 py-1.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
                 <button
-                    id="clearSearch"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white hidden"
+                    id='clearSearch'
+                    class='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white hidden'
                 >
                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                        xmlns='http://www.w3.org/2000/svg'
+                        class='h-4 w-4'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        stroke='currentColor'
                     >
                         <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"></path>
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                            stroke-width='2'
+                            d='M6 18L18 6M6 6l12 12'></path>
                     </svg>
                 </button>
             </div>
@@ -687,30 +679,30 @@
 
     <!-- Etiquetas de filtro dinámicas que se actualizan con JavaScript -->
     <div
-        id="filterTags"
-        class="flex flex-wrap gap-2 mt-2 px-2 justify-center min-h-6"
+        id='filterTags'
+        class='flex flex-wrap gap-2 mt-2 px-2 justify-center min-h-6'
     >
         <!-- Las etiquetas de filtro se generarán dinámicamente con JavaScript -->
     </div>
 
     <!-- Botón de reiniciar filtros -->
-    <div class="mt-4 flex justify-center">
+    <div class='mt-4 flex justify-center'>
         <button
-            id="resetFiltersHeader"
-            class="text-sm text-gray-300 hover:text-white flex items-center opacity-0 transition-all py-1 px-3 rounded-full bg-white/10 hover:bg-white/20 pointer-events-none"
+            id='resetFiltersHeader'
+            class='text-sm text-gray-300 hover:text-white flex items-center opacity-0 transition-all py-1 px-3 rounded-full bg-white/10 hover:bg-white/20 pointer-events-none'
         >
             <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-3.5 w-3.5 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                class='h-3.5 w-3.5 mr-1'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
             >
                 <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
                 ></path>
             </svg>
             Reiniciar filtros

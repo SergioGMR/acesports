@@ -26,13 +26,16 @@ export interface Event {
     duration?: string;
 }
 
-export interface Teams {
-    local: {
-        name?: string;
-        image?: string;
-    }
-    visitor: {
-        name?: string;
-        image?: string;
-    }
+export interface Team {
+    name?: string;
+    image?: string;
 }
+
+export interface Teams {
+    local: Team;
+    visitor: Team;
+}
+
+// Tipos de utilidad para mejorar la seguridad de tipos
+export type ThemeMode = 'light' | 'dark';
+export type ViewMode = 'grid' | 'list';

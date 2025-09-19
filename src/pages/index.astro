@@ -5,6 +5,14 @@ import SportCard from "@/components/SportCard.astro";
 import LoadingIndicator from "@/components/LoadingIndicator.astro";
 import FilterBar from "@/components/FilterBar.astro";
 import ViewControls from "@/components/ViewControls.astro";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
 
 const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	.then((response) => {
@@ -19,8 +27,36 @@ const request = fetch("https://epg-sports.vercel.app/api/getEvents")
 	});
 
 const rawSports = await request;
+
+// Función para verificar si un evento ya ha pasado
+const isEventPast = (event: SportEvent): boolean => {
+	try {
+		// Validar formato de hora
+		const timeRegex = /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/;
+		const validHour = timeRegex.test(event.date.hour) ? event.date.hour : "00:00";
+
+		// Crear fecha y hora del evento en Madrid
+		const eventDateTime = `${event.date.day} ${validHour}`;
+		const eventTimeMadrid = dayjs.tz(
+			eventDateTime,
+			"DD/MM/YYYY HH:mm",
+			"Europe/Madrid",
+		);
+
+		// Comparar con la hora actual
+		const now = dayjs();
+		return eventTimeMadrid.isBefore(now);
+	} catch (error) {
+		console.warn("Error al procesar fecha del evento:", error);
+		return false; // Si hay error, mostrar el evento por defecto
+	}
+};
+
 const sportsData = rawSports.filter(
-	(event: SportEvent) => event.links && event.links.length > 0, // Mostrar eventos de hoy y futuros
+	(event: SportEvent) =>
+		event.links &&
+		event.links.length > 0 &&
+		!isEventPast(event) // Filtrar eventos que ya han pasado
 );
 
 const geoIpRequest = fetch("https://get.geojs.io/v1/ip/geo.json")

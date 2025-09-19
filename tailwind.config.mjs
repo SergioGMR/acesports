@@ -32,5 +32,5 @@ export default {
 			},
 		},
 	},
-	plugins: {}, // En Tailwind v4, plugins es un objeto
+	plugins: [],
 }

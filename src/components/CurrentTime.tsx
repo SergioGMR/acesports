@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-export default function CurrentTime() {
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
+export default function CurrentTime(): string {
+  const [time, setTime] = useState<string>(new Date().toLocaleTimeString());
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval: NodeJS.Timeout = setInterval(() => {
       setTime(new Date().toLocaleTimeString());
     }, 1000);
 
